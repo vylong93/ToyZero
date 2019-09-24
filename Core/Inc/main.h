@@ -37,7 +37,11 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-
+typedef enum led_rgb {
+  led0 = GPIO_PIN_13,
+  led1 = GPIO_PIN_14,
+  led2 = GPIO_PIN_15,
+} led_rgb_t;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
