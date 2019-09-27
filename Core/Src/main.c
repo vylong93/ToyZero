@@ -43,6 +43,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim1;
+TIM_HandleTypeDef htim4;
 
 /* USER CODE BEGIN PV */
 const uint8_t lights[360]={
@@ -113,6 +114,7 @@ const uint8_t HSVpower[121] =
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM1_Init(void);
+static void MX_TIM4_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -179,6 +181,246 @@ void sineLED(led_rgb_t led, int angle) /* sine wave rainbow */
   setRGB(led, lights[(angle+120)%360], lights[angle],  lights[(angle+240)%360]);
 }
 
+/* The number of milliseconds to kill the note before the duration expires.
+ * This leaves a nice gap between back-to-back notes. */
+#define DEAD_TIME_MS 20
+
+/* Assuming 4/4 time, this is how many ticks we subdivide the beat into. So
+ * in other words, 4 ticks per beat gives us 16th note resolution. We then
+ * define all note durations in lengths of these 16th note "ticks". */
+#define TICKS_PER_BEAT 4
+
+#define E3 3033
+#define Fs3 2703
+#define G3 2551
+#define Gs3 2408
+#define A3 2273
+#define As3 2145
+#define B3 2025
+#define Cb4
+#define C4 1911
+#define Cs4 1804
+#define Db4 1804
+#define D4 1703
+#define Ds4 1607
+#define Eb4 1607
+#define E4 1517
+#define F4 1432
+#define Fs4 1351
+#define Gb4 1351
+#define G4 1276
+#define Gs4 1204
+#define Ab4 1204
+#define A4 1136
+#define As4 1073
+#define Bb4 1073
+#define B4 1012
+#define C5 956
+#define Cs5 902
+#define Db5 902
+#define D5 851
+#define Ds5 804
+#define Eb5 804
+#define E5 758
+#define F5 716
+#define Fs5 676
+#define Gb5 676
+#define G5 638
+#define Gs5 602
+#define Ab5 602
+#define A5 568
+
+volatile unsigned int sound_enabled = 0;
+volatile unsigned int ms_elapsed = 0;
+volatile unsigned int current_note = G4;
+static unsigned int ms_per_tick = 0;
+
+void play(unsigned int note, unsigned int duration_ticks) {
+    unsigned int duration_ms = 0;
+
+    /* Compute the duration (in ms). */
+    duration_ms = duration_ticks * ms_per_tick;
+
+    /* Set the current note. */
+    current_note = note;
+
+    /* Enable the sound ouput. */
+    sound_enabled = 1;
+    HAL_TIM_OC_Start_IT(&htim4, TIM_CHANNEL_4);
+
+    /* Reset the elapsed counter. */
+    ms_elapsed = 0;
+
+    /* Wait for the note duration to expire. */
+    while (ms_elapsed < duration_ms - DEAD_TIME_MS);
+
+    /* Disable sound output. */
+    sound_enabled = 0;
+    HAL_TIM_OC_Stop_IT(&htim4, TIM_CHANNEL_4);
+
+    /* Wait for the full duration to expire. */
+    while (ms_elapsed < duration_ms);
+}
+void rest(unsigned int duration_ticks) {
+    unsigned int duration_ms = 0;
+
+    /* Compute the duration (in ms). */
+    duration_ms = duration_ticks * ms_per_tick;
+
+    /* Disable sound output. */
+    sound_enabled = 0;
+    HAL_TIM_OC_Stop_IT(&htim4, TIM_CHANNEL_4);
+
+    /* Reset the elapsed counter. */
+    ms_elapsed = 0;
+
+    /* Wait for the full duration to expire. */
+    while (ms_elapsed < duration_ms);
+}
+void song_measure_1() {
+    play(E4, 1);
+    play(E4, 1);
+    rest(1);
+    play(E4, 1);
+    rest(1);
+    play(C4, 1);
+    play(E4, 1);
+    rest(1);
+    play(G4, 1);
+    rest(3);
+    play(G3, 1);
+    rest(3);
+}
+
+void song_measure_2() {
+    play(C4, 1);
+    rest(2);
+    play(G3, 1);
+    rest(2);
+    play(E3, 1);
+    rest(2);
+    play(A3, 1);
+    rest(1);
+    play(B3, 1);
+    rest(1);
+    play(As3, 1);
+    play(A3, 1);
+    rest(1);
+}
+
+void song_measure_3() {
+    play(G3, 1);
+    play(E4, 1);
+    rest(1);
+    play(G4, 1);
+    play(A4, 1);
+    rest(1);
+    play(F4, 1);
+    play(G4, 1);
+    rest(1);
+    play(E4, 1);
+    rest(1);
+    play(C4, 1);
+    play(D4, 1);
+    play(B3, 1);
+    rest(2);
+}
+
+void song_measure_4() {
+    rest(2);
+    play(G4, 1);
+    play(Fs4, 1);
+    play(F4,1);
+    play(Ds4, 1);
+    rest(1);
+    play(E4, 1);
+    rest(1);
+    play(Gs3, 1);
+    play(A3, 1);
+    play(C4, 1);
+    rest(1);
+    play(A3, 1);
+    play(C4, 1);
+    play(D4, 1);
+}
+
+void song_measure_5() {
+    rest(2);
+    play(G4, 1);
+    play(Fs4, 1);
+    play(F4,1);
+    play(Ds4, 1);
+    rest(1);
+    play(E4, 1);
+    rest(1);
+    play(C5, 1);
+    rest(1);
+    play(C5, 1);
+    play(C5, 1);
+    rest(3);
+}
+
+void song_measure_6() {
+    rest(2);
+    play(Eb4, 1);
+    rest(2);
+    play(D4, 1);
+    rest(2);
+    play(C4, 1);
+    rest(7);
+}
+
+void song_measure_7() {
+    play(C4, 1);
+    play(C4, 1);
+    rest(1);
+    play(C4, 1);
+    rest(1);
+    play(C4, 1);
+    play(D4, 1);
+    rest(1);
+    play(E4, 1);
+    play(C4, 1);
+    rest(1);
+    play(A3, 1);
+    play(G3, 1);
+    rest(3);
+}
+
+void song_measure_8() {
+    play(C4, 1);
+    play(C4, 1);
+    rest(1);
+    play(C4, 1);
+    rest(1);
+    play(C4, 1);
+    play(D4, 1);
+    play(E4,1);
+    rest(7);
+}
+
+void song_play() {
+    song_measure_1();
+    song_measure_2();
+    song_measure_3();
+    song_measure_2();
+    song_measure_3();
+    song_measure_4();
+    song_measure_5();
+    song_measure_4();
+    song_measure_6();
+    song_measure_4();
+    song_measure_5();
+    song_measure_4();
+    song_measure_6();
+    song_measure_7();
+    song_measure_8();
+    song_measure_7();
+}
+void set_bpm(unsigned int bpm) {
+  // TODO: compute the number of ms per tick from the beats per minute
+  ms_per_tick = 60000 / (TICKS_PER_BEAT * bpm);
+}
 /* USER CODE END 0 */
 
 /**
@@ -211,6 +453,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_TIM1_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
@@ -223,9 +466,11 @@ int main(void)
     setRGB(led0 | led1 | led2, i, 0, i);
     HAL_Delay(2);
   }
-  for (int i = 0; i < 3; i ++) {
-    blinkLedOnBoard();
-  }
+
+  //HAL_TIM_Base_Start_IT(&htim4);
+  //HAL_TIM_OC_Start_IT(&htim4, TIM_CHANNEL_4);
+  set_bpm(150);
+  song_play();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -279,7 +524,7 @@ void SystemClock_Config(void)
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV16;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV4;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
@@ -345,12 +590,10 @@ static void MX_TIM1_Init(void)
   {
     Error_Handler();
   }
-  sConfigOC.Pulse = 1-1;
   if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
   {
     Error_Handler();
   }
-  sConfigOC.Pulse = 1-1;
   if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
   {
     Error_Handler();
@@ -370,6 +613,65 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 2 */
   HAL_TIM_MspPostInit(&htim1);
+
+}
+
+/**
+  * @brief TIM4 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM4_Init(void)
+{
+
+  /* USER CODE BEGIN TIM4_Init 0 */
+
+  /* USER CODE END TIM4_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
+
+  /* USER CODE BEGIN TIM4_Init 1 */
+
+  /* USER CODE END TIM4_Init 1 */
+  htim4.Instance = TIM4;
+  htim4.Init.Prescaler = 2-1;
+  htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim4.Init.Period = 65536-1;
+  htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim4, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_OC_Init(&htim4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_TOGGLE;
+  sConfigOC.Pulse = 1136;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_OC_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM4_Init 2 */
+
+  /* USER CODE END TIM4_Init 2 */
+  HAL_TIM_MspPostInit(&htim4);
 
 }
 
@@ -411,7 +713,18 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+/**
+  * @brief  Output Compare callback in non-blocking mode
+  * @param  htim TIM OC handle
+  * @retval None
+  */
+void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  if (htim->Instance == TIM4) {
+    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+    htim4.Instance->CCR4 += current_note;
+  }
+}
 /* USER CODE END 4 */
 
 /**
