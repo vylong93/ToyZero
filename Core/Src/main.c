@@ -227,7 +227,9 @@ int main(void)
     setRGB(led0 | led1 | led2, i, 0, i);
     HAL_Delay(2);
   }
-
+  for (int i = 0; i < 3; i ++) {
+    blinkLedOnBoard();
+  }
   play_song(SUPER_MARIO);
   /* USER CODE END 2 */
 
@@ -479,7 +481,6 @@ static void MX_GPIO_Init(void)
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if (htim->Instance == TIM4) {
-    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
     htim4.Instance->CCR4 += current_note;
   }
 }
