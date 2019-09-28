@@ -106,7 +106,6 @@ int main(void)
   }
   init_rgb_driver();
   test_all_rgb_leds();
-  play_song(SUPER_MARIO);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -116,7 +115,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    test_rgb_rainbow(led2);
   }
   /* USER CODE END 3 */
 }
@@ -335,6 +333,16 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : PB5 PB6 PB7 PB8 */
+  GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
 }
 
 /* USER CODE BEGIN 4 */
@@ -347,6 +355,35 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if (htim->Instance == TIM4) {
     htim4.Instance->CCR4 += current_note;
+  }
+}
+
+/**
+  * @brief  EXTI line detection callbacks.
+  * @param  GPIO_Pin: Specifies the pins connected EXTI line
+  * @retval None
+  */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+  switch  (GPIO_Pin) {
+    case GPIO_PIN_5:
+    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+    break;
+
+    case GPIO_PIN_6:
+    test_all_rgb_leds();
+    break;
+
+    case GPIO_PIN_7:
+    test_rgb_rainbow(led2);
+    break;
+
+    case GPIO_PIN_8:
+    play_song(SUPER_MARIO);
+    break;
+
+    default:
+    break;
   }
 }
 /* USER CODE END 4 */
