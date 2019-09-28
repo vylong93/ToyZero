@@ -32,7 +32,7 @@ static void set_bpm(unsigned int bpm) {
 
 /**
   * @brief  Plays the passed note for the given duration (in ticks, see TICKS PER BEAT).
-  *         Blocks until the note is over.
+  *         Blocks until the note is over. If note is REST, we just don't play a note for the duration.
   * @param  note target note to play
   * @param  duration_ticks number of ticks for this note
   * @retval None
@@ -43,183 +43,75 @@ static void play(note_t note, unsigned int duration_ticks) {
   /* Compute the duration (in ms). */
   duration_ms = duration_ticks * ms_per_tick;
 
-  /* Set the current note. */
-  current_note = (unsigned int)note;
+  if (note == REST) {
+    /* Disable sound output. */
+    HAL_TIM_OC_Stop_IT(&htim4, TIM_CHANNEL_4);
+  } else {
+    /* Set the current note. */
+    current_note = (unsigned int)note;
 
-  /* Enable the sound ouput. */
-  HAL_TIM_OC_Start_IT(&htim4, TIM_CHANNEL_4);
+    /* Enable the sound ouput. */
+    HAL_TIM_OC_Start_IT(&htim4, TIM_CHANNEL_4);
+  }
 
   /* Reset the elapsed counter. */
   ms_elapsed = 0;
 
-  /* Wait for the note duration to expire. */
-  while (ms_elapsed < duration_ms - DEAD_TIME_MS);
+  if (note != REST) {
+    /* Wait for the note duration to expire. */
+    while (ms_elapsed < duration_ms - DEAD_TIME_MS);
 
-  /* Disable sound output. */
-  HAL_TIM_OC_Stop_IT(&htim4, TIM_CHANNEL_4);
+    /* Disable sound output. */
+    HAL_TIM_OC_Stop_IT(&htim4, TIM_CHANNEL_4);
+  }
 
   /* Wait for the full duration to expire. */
   while (ms_elapsed < duration_ms);
 }
 
 /**
-  * @brief  Rests for the given duration. Exactly the same as playing,
-  *         except we just don't play a note for the duration.
-  * @param  duration_ticks number of silent ticks
+  * @brief
+  * @param  measures_list is the list of measures of a song
+  * @param  measure_sequence is the playing order of measure in measures_list
+  * @param  sequence_length is the length of measure_sequence
+  * @retval None
   * @retval None
   */
-static void rest(unsigned int duration_ticks) {
-  unsigned int duration_ms = 0;
-
-  /* Compute the duration (in ms). */
-  duration_ms = duration_ticks * ms_per_tick;
-
-  /* Disable sound output. */
-  HAL_TIM_OC_Stop_IT(&htim4, TIM_CHANNEL_4);
-
-  /* Reset the elapsed counter. */
-  ms_elapsed = 0;
-
-  /* Wait for the full duration to expire. */
-  while (ms_elapsed < duration_ms);
-}
-
-// TODO: switch to array of music sheet
-void super_mario_song_measure_1() {
-  play(E4, 1);
-  play(E4, 1);
-  rest(1);
-  play(E4, 1);
-  rest(1);
-  play(C4, 1);
-  play(E4, 1);
-  rest(1);
-  play(G4, 1);
-  rest(3);
-  play(G3, 1);
-  rest(3);
-}
-void super_mario_song_measure_2() {
-  play(C4, 1);
-  rest(2);
-  play(G3, 1);
-  rest(2);
-  play(E3, 1);
-  rest(2);
-  play(A3, 1);
-  rest(1);
-  play(B3, 1);
-  rest(1);
-  play(As3, 1);
-  play(A3, 1);
-  rest(1);
-}
-void super_mario_song_measure_3() {
-  play(G3, 1);
-  play(E4, 1);
-  rest(1);
-  play(G4, 1);
-  play(A4, 1);
-  rest(1);
-  play(F4, 1);
-  play(G4, 1);
-  rest(1);
-  play(E4, 1);
-  rest(1);
-  play(C4, 1);
-  play(D4, 1);
-  play(B3, 1);
-  rest(2);
-}
-void super_mario_song_measure_4() {
-  rest(2);
-  play(G4, 1);
-  play(Fs4, 1);
-  play(F4,1);
-  play(Ds4, 1);
-  rest(1);
-  play(E4, 1);
-  rest(1);
-  play(Gs3, 1);
-  play(A3, 1);
-  play(C4, 1);
-  rest(1);
-  play(A3, 1);
-  play(C4, 1);
-  play(D4, 1);
-}
-void super_mario_song_measure_5() {
-  rest(2);
-  play(G4, 1);
-  play(Fs4, 1);
-  play(F4,1);
-  play(Ds4, 1);
-  rest(1);
-  play(E4, 1);
-  rest(1);
-  play(C5, 1);
-  rest(1);
-  play(C5, 1);
-  play(C5, 1);
-  rest(3);
-}
-void super_mario_song_measure_6() {
-  rest(2);
-  play(Eb4, 1);
-  rest(2);
-  play(D4, 1);
-  rest(2);
-  play(C4, 1);
-  rest(7);
-}
-void super_mario_song_measure_7() {
-  play(C4, 1);
-  play(C4, 1);
-  rest(1);
-  play(C4, 1);
-  rest(1);
-  play(C4, 1);
-  play(D4, 1);
-  rest(1);
-  play(E4, 1);
-  play(C4, 1);
-  rest(1);
-  play(A3, 1);
-  play(G3, 1);
-  rest(3);
-}
-void super_mario_song_measure_8() {
-  play(C4, 1);
-  play(C4, 1);
-  rest(1);
-  play(C4, 1);
-  rest(1);
-  play(C4, 1);
-  play(D4, 1);
-  play(E4,1);
-  rest(7);
+void play_measures(measure_t* measures_list, unsigned char* measure_sequence, int sequence_length) {
+  for (int i = 0; i < sequence_length; i++) {
+    for (int j = 0; j < measures_list[measure_sequence[i]].length; j += 2) {
+      play(measures_list[measure_sequence[i]].data[j], measures_list[measure_sequence[i]].data[j + 1]);
+    }
+  }
 }
 /**
   * @brief  Play super mario measures
   * @retval None
   */
 void play_super_mario_song(void) {
-  super_mario_song_measure_1();
-  super_mario_song_measure_2();
-  super_mario_song_measure_3();
-  super_mario_song_measure_2();
-  super_mario_song_measure_3();
-  super_mario_song_measure_4();
-  super_mario_song_measure_5();
-  super_mario_song_measure_4();
-  super_mario_song_measure_6();
-  super_mario_song_measure_4();
-  super_mario_song_measure_5();
-  super_mario_song_measure_4();
-  super_mario_song_measure_6();
-  super_mario_song_measure_7();
-  super_mario_song_measure_8();
-  super_mario_song_measure_7();
+  note_t measures_1[] = { E4, 1, E4, 1, REST, 1, E4, 1, REST, 1, C4, 1, E4, 1, REST, 1, G4, 1, REST, 3, G3, 1, REST, 3 };
+  note_t measures_2[] = { C4, 1, REST, 2, G3, 1, REST, 2, E3, 1, REST, 2, A3, 1, REST, 1, B3, 1, REST, 1, As3, 1, A3, 1, REST, 1 };
+  note_t measures_3[] = { G3, 1, E4, 1, REST, 1, G4, 1, A4, 1, REST, 1, F4, 1, G4, 1, REST, 1, E4, 1, REST, 1, C4, 1, D4, 1, B3, 1, REST, 2 };
+  note_t measures_4[] = { REST, 2, G4, 1, Fs4, 1, F4,1, Ds4, 1, REST, 1, E4, 1, REST, 1, Gs3, 1, A3, 1, C4, 1, REST, 1, A3, 1, C4, 1, D4, 1 };
+  note_t measures_5[] = { REST, 2, G4, 1, Fs4, 1, F4, 1, Ds4, 1, REST, 1, E4, 1, REST, 1, C5, 1, REST, 1, C5, 1, C5, 1, REST, 3 };
+  note_t measures_6[] = { REST, 2, Eb4, 1, REST, 2, D4, 1, REST, 2, C4, 1, REST, 7 };
+  note_t measures_7[] = { C4, 1, C4, 1, REST, 1, C4, 1, REST, 1, C4, 1, D4, 1, REST, 1, E4, 1, C4, 1, REST, 1, A3, 1, G3, 1, REST, 3 };
+  note_t measures_8[] = { C4, 1, C4, 1, REST, 1, C4, 1, REST, 1, C4, 1, D4, 1, E4, 1, REST, 7 };
+
+  measure_t measures_list[] = { {.data = NULL, .length = 0},
+                                {.data = measures_1, .length = 24},
+                                {.data = measures_2, .length = 26},
+                                {.data = measures_3, .length = 30},
+                                {.data = measures_4, .length = 30},
+                                {.data = measures_5, .length = 26},
+                                {.data = measures_6, .length = 14},
+                                {.data = measures_7, .length = 28},
+                                {.data = measures_8, .length = 18}
+                              };
+
+  unsigned char super_mario_measure_sequence[] = { 1, 2, 3, 2, 3, 4, 5, 4, 6, 4, 5, 4, 6, 7, 8, 7 };
+
+  play_measures(measures_list, super_mario_measure_sequence, 16);
 }
 
 /**

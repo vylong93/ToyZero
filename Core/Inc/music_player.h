@@ -34,6 +34,7 @@ extern "C" {
  * Ex. Note [B3: 246.94Hz] value = 1000000 / (246.94 * 2) = 2024.7833
  */
 typedef enum note {
+  REST = 0,
   E3 = 3033,
   Fs3 = 2703,
   G3 = 2551,
@@ -73,6 +74,11 @@ typedef enum note {
   Ab5 = 602,
   A5 = 568,
 } note_t;
+
+typedef struct measure {
+  note_t* data;
+  unsigned int length;
+} measure_t;
 
 extern volatile unsigned int current_note;
 
