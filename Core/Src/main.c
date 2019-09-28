@@ -116,18 +116,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    for (int k = 0; k < 360; k++)
-    {
-      set_rgb_sineLED(led2, k);
-      HAL_Delay(30);
-      /*
-      for (int d = 0; d < 60; d++) {
-        sineLED(led2|led1|led0, k);
-        powerHSV(led2|led1|led0, k);
-        trueHSV(led2|led1|led0, k);
-      }
-      */
-    }
+    test_rgb_rainbow(led2);
   }
   /* USER CODE END 3 */
 }

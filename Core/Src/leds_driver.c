@@ -177,5 +177,25 @@ void set_rgb_sineLED(led_rgb_t led, int angle)
   set_rgb(led, lights[(angle+120)%360], lights[angle],  lights[(angle+240)%360]);
 }
 
+/**
+  * @brief  Test rainbow color
+  * @param  led target LED for changing color
+  * @retval None
+  */
+void test_rgb_rainbow(led_rgb_t led)
+{
+  for (int k = 0; k < 360; k++)
+  {
+    set_rgb_sineLED(led, k);
+    HAL_Delay(30);
+    /*
+    for (int d = 0; d < 60; d++) {
+      sineLED(led2|led1|led0, k);
+      powerHSV(led2|led1|led0, k);
+      trueHSV(led2|led1|led0, k);
+    }
+    */
+  }
+}
 
 /***************************************************************END OF FILE****/

@@ -37,6 +37,7 @@ void test_all_rgb_leds(void);
 void set_rgb_trueHSV(led_rgb_t led, int angle);
 void set_rgb_powerHSV(led_rgb_t led, int angle);
 void set_rgb_sineLED(led_rgb_t led, int angle);
+void test_rgb_rainbow(led_rgb_t led);
 
 #ifdef __cplusplus
 }
