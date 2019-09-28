@@ -47,6 +47,9 @@ TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim4;
 
 /* USER CODE BEGIN PV */
+volatile char test_all_rgb_leds_flag = 0;
+volatile char test_rgb_rainbow_flag = 0;
+volatile char test_play_song_flag = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -115,6 +118,15 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    if (test_all_rgb_leds_flag) {
+      test_all_rgb_leds();
+    }
+    if (test_rgb_rainbow_flag) {
+      test_rgb_rainbow(led2);
+    }
+    if (test_play_song_flag) {
+      play_song(SUPER_MARIO);
+    }
   }
   /* USER CODE END 3 */
 }
@@ -367,19 +379,28 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   switch  (GPIO_Pin) {
     case GPIO_PIN_5:
+    test_rgb_rainbow_flag = 0;
+    test_play_song_flag = 0;
+    test_all_rgb_leds_flag = 0;
     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
     break;
 
     case GPIO_PIN_6:
-    test_all_rgb_leds();
+    test_rgb_rainbow_flag = 0;
+    test_play_song_flag = 0;
+    test_all_rgb_leds_flag ^= 1;
     break;
 
     case GPIO_PIN_7:
-    test_rgb_rainbow(led2);
+    test_all_rgb_leds_flag = 0;
+    test_play_song_flag = 0;
+    test_rgb_rainbow_flag ^= 1;
     break;
 
     case GPIO_PIN_8:
-    play_song(SUPER_MARIO);
+    test_all_rgb_leds_flag = 0;
+    test_rgb_rainbow_flag = 0;
+    test_play_song_flag ^= 1;
     break;
 
     default:
