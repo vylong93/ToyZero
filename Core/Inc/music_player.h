@@ -29,45 +29,50 @@ extern "C" {
  * define all note durations in lengths of these 16th note "ticks". */
 #define TICKS_PER_BEAT 4
 
-#define E3 3033
-#define Fs3 2703
-#define G3 2551
-#define Gs3 2408
-#define A3 2273
-#define As3 2145
-#define B3 2025
-#define Cb4
-#define C4 1911
-#define Cs4 1804
-#define Db4 1804
-#define D4 1703
-#define Ds4 1607
-#define Eb4 1607
-#define E4 1517
-#define F4 1432
-#define Fs4 1351
-#define Gb4 1351
-#define G4 1276
-#define Gs4 1204
-#define Ab4 1204
-#define A4 1136
-#define As4 1073
-#define Bb4 1073
-#define B4 1012
-#define C5 956
-#define Cs5 902
-#define Db5 902
-#define D5 851
-#define Ds5 804
-#define Eb5 804
-#define E5 758
-#define F5 716
-#define Fs5 676
-#define Gb5 676
-#define G5 638
-#define Gs5 602
-#define Ab5 602
-#define A5 568
+/* Note frequency mapping to Timer Comparing Value (16 bits)
+ * Note Value = Timer Clock Speed / (Note frequency * 2)
+ * Ex. Note [B3: 246.94Hz] value = 1000000 / (246.94 * 2) = 2024.7833
+ */
+typedef enum note {
+  E3 = 3033,
+  Fs3 = 2703,
+  G3 = 2551,
+  Gs3 = 2408,
+  A3 = 2273,
+  As3 = 2145,
+  B3 = 2025,
+  C4 = 1911,
+  Cs4 = 1804,
+  Db4 = 1804,
+  D4 = 1703,
+  Ds4 = 1607,
+  Eb4 = 1607,
+  E4 = 1517,
+  F4 = 1432,
+  Fs4 = 1351,
+  Gb4 = 1351,
+  G4 = 1276,
+  Gs4 = 1204,
+  Ab4 = 1204,
+  A4 = 1136,
+  As4 = 1073,
+  Bb4 = 1073,
+  B4 = 1012,
+  C5 = 956,
+  Cs5 = 902,
+  Db5 = 902,
+  D5 = 851,
+  Ds5 = 804,
+  Eb5 = 804,
+  E5 = 758,
+  F5 = 716,
+  Fs5 = 676,
+  Gb5 = 676,
+  G5 = 638,
+  Gs5 = 602,
+  Ab5 = 602,
+  A5 = 568,
+} note_t;
 
 extern volatile unsigned int current_note;
 
