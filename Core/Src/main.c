@@ -120,9 +120,11 @@ int main(void)
     /* USER CODE BEGIN 3 */
     if (test_all_rgb_leds_flag) {
       test_all_rgb_leds();
+      play_song(PRINCESS_SLIDE);
     }
     if (test_rgb_rainbow_flag) {
-      test_rgb_rainbow(led2);
+      test_rgb_rainbow(led0);
+      play_song(BOBOMB_BATTLEFIELD);
     }
     if (test_play_song_flag) {
       play_song(SUPER_MARIO);
