@@ -58,9 +58,7 @@
 /* External variables --------------------------------------------------------*/
 extern TIM_HandleTypeDef htim4;
 /* USER CODE BEGIN EV */
-extern volatile unsigned int sound_enabled;
-extern volatile unsigned int current_note;
-extern volatile unsigned int ms_elapsed;
+extern volatile unsigned int ms_elapsed; /* music_player.c */
 /* USER CODE END EV */
 
 /******************************************************************************/
