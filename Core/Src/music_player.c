@@ -148,6 +148,45 @@ void play_bobomb_battlefield_song(void) {
 }
 
 /**
+  * @brief  Play Princess Slide measures
+  * @retval None
+  */
+void play_princess_slide_song(void) {
+  note_t measure_1[] = { A5, 4, A3, 4, A5, 4, A3, 4 };
+  note_t measure_2[] = { A5, 4, Fs5, 4, E5, 4, Ds5, 4 };
+  note_t measure_3[] = { D5, 2, G3, 2, B3, 2, G3, 2, D5, 2, G3, 2, B3, 2, G3, 2 };
+  note_t measure_4[] = { D5, 2, G3, 2, B3, 2, G4, 1, B4, 1, D5, 2, G3, 2, E5, 2, G3, 2 };
+  note_t measure_5[] = { D5, 2, Fs3, 2, A3, 2, A4, 2, Fs5, 2, Fs3, 2, A5, 2, Fs3, 2 };
+  note_t measure_6[] = { Gs5, 2, Fs3, 2, A5, 2, Fs3, 2, Gs5, 1, A5, 1, Gs5, 1, Fs5, 1, D5, 2, A4, 2 };
+  note_t measure_7[] = { B4, 2, G3, 1, Cs5, 1, D5, 2, G3, 1, E5, 1, Fs5, 1, F5, 1, Fs5, 1, G5, 1, A5, 1, G5, 1, Fs5, 1, E5, 1 };
+  note_t measure_8[] = { D5, 1, Cs5, 1, D5, 1, A5, 1, Cs5, 1, C5, 1, Cs5, 1, A5, 1, Cs5, 1, C5, 1, B4, 1, Bb4, 1, A4, 1, Gs4, 1, G4, 1, E4, 1 };
+  note_t measure_9[] = { A4, 2, A3, 2, D4, 2, A3, 2, B4, 2, A3, 2, A4, 2, A3, 2 };
+  note_t measure_10[] = { D4, 2, D5, 2, Cs5, 2, D5, 2, Fs5, 2, A3, 2, E5, 2, D5, 2 };
+  note_t measure_11[] = { B4, 2, G3, 2, B4, 2, G3, 2, E5, 2, G3, 2, D5, 2, G3, 2 };
+  note_t measure_12[] = { B4, 2, B4, 2, Bb4, 2, B4, 2, D5, 2, G3, 2, Cs5, 2, B4, 2 };
+  note_t measure_13[] = { A4, 2, Fs3, 2, Fs3, 2, A4, 2, Fs3, 2, Fs3, 2, A5, 2, Fs3, 2 };
+
+  measure_t measures_list[] = { {.data = NULL, .length = 0},
+                                {.data = measure_1, .length = 8},
+                                {.data = measure_2, .length = 8},
+                                {.data = measure_3, .length = 16},
+                                {.data = measure_4, .length = 18},
+                                {.data = measure_5, .length = 16},
+                                {.data = measure_6, .length = 20},
+                                {.data = measure_7, .length = 28},
+                                {.data = measure_8, .length = 32},
+                                {.data = measure_9, .length = 16},
+                                {.data = measure_10, .length = 16},
+                                {.data = measure_11, .length = 16},
+                                {.data = measure_12, .length = 16},
+                                {.data = measure_13, .length = 16},
+                              };
+  unsigned char super_princess_slide_sequence[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
+
+  play_measures(measures_list, super_princess_slide_sequence, 13);
+}
+
+/**
   * @brief  Blocking call function to play measures of a specific song
   * @param  song Target song to play
   *          This parameter can be one of the following values:
@@ -164,6 +203,11 @@ void play_song(song_t song) {
     case BOBOMB_BATTLEFIELD:
       set_bpm(110);
       play_bobomb_battlefield_song();
+    break;
+
+    case PRINCESS_SLIDE:
+      set_bpm(180);
+      play_princess_slide_song();
     break;
 
     default:

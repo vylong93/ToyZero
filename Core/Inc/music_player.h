@@ -85,6 +85,7 @@ extern volatile unsigned int current_note;
 typedef enum Song {
   SUPER_MARIO = 0,
   BOBOMB_BATTLEFIELD = 1,
+  PRINCESS_SLIDE = 2,
 } song_t;
 
 void play_song(song_t song);
