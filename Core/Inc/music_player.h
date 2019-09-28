@@ -83,7 +83,8 @@ typedef struct measure {
 extern volatile unsigned int current_note;
 
 typedef enum Song {
-	SUPER_MARIO = 0
+  SUPER_MARIO = 0,
+  BOBOMB_BATTLEFIELD = 1,
 } song_t;
 
 void play_song(song_t song);

@@ -89,29 +89,62 @@ void play_measures(measure_t* measures_list, unsigned char* measure_sequence, in
   * @retval None
   */
 void play_super_mario_song(void) {
-  note_t measures_1[] = { E4, 1, E4, 1, REST, 1, E4, 1, REST, 1, C4, 1, E4, 1, REST, 1, G4, 1, REST, 3, G3, 1, REST, 3 };
-  note_t measures_2[] = { C4, 1, REST, 2, G3, 1, REST, 2, E3, 1, REST, 2, A3, 1, REST, 1, B3, 1, REST, 1, As3, 1, A3, 1, REST, 1 };
-  note_t measures_3[] = { G3, 1, E4, 1, REST, 1, G4, 1, A4, 1, REST, 1, F4, 1, G4, 1, REST, 1, E4, 1, REST, 1, C4, 1, D4, 1, B3, 1, REST, 2 };
-  note_t measures_4[] = { REST, 2, G4, 1, Fs4, 1, F4,1, Ds4, 1, REST, 1, E4, 1, REST, 1, Gs3, 1, A3, 1, C4, 1, REST, 1, A3, 1, C4, 1, D4, 1 };
-  note_t measures_5[] = { REST, 2, G4, 1, Fs4, 1, F4, 1, Ds4, 1, REST, 1, E4, 1, REST, 1, C5, 1, REST, 1, C5, 1, C5, 1, REST, 3 };
-  note_t measures_6[] = { REST, 2, Eb4, 1, REST, 2, D4, 1, REST, 2, C4, 1, REST, 7 };
-  note_t measures_7[] = { C4, 1, C4, 1, REST, 1, C4, 1, REST, 1, C4, 1, D4, 1, REST, 1, E4, 1, C4, 1, REST, 1, A3, 1, G3, 1, REST, 3 };
-  note_t measures_8[] = { C4, 1, C4, 1, REST, 1, C4, 1, REST, 1, C4, 1, D4, 1, E4, 1, REST, 7 };
+  note_t measure_1[] = { E4, 1, E4, 1, REST, 1, E4, 1, REST, 1, C4, 1, E4, 1, REST, 1, G4, 1, REST, 3, G3, 1, REST, 3 };
+  note_t measure_2[] = { C4, 1, REST, 2, G3, 1, REST, 2, E3, 1, REST, 2, A3, 1, REST, 1, B3, 1, REST, 1, As3, 1, A3, 1, REST, 1 };
+  note_t measure_3[] = { G3, 1, E4, 1, REST, 1, G4, 1, A4, 1, REST, 1, F4, 1, G4, 1, REST, 1, E4, 1, REST, 1, C4, 1, D4, 1, B3, 1, REST, 2 };
+  note_t measure_4[] = { REST, 2, G4, 1, Fs4, 1, F4,1, Ds4, 1, REST, 1, E4, 1, REST, 1, Gs3, 1, A3, 1, C4, 1, REST, 1, A3, 1, C4, 1, D4, 1 };
+  note_t measure_5[] = { REST, 2, G4, 1, Fs4, 1, F4, 1, Ds4, 1, REST, 1, E4, 1, REST, 1, C5, 1, REST, 1, C5, 1, C5, 1, REST, 3 };
+  note_t measure_6[] = { REST, 2, Eb4, 1, REST, 2, D4, 1, REST, 2, C4, 1, REST, 7 };
+  note_t measure_7[] = { C4, 1, C4, 1, REST, 1, C4, 1, REST, 1, C4, 1, D4, 1, REST, 1, E4, 1, C4, 1, REST, 1, A3, 1, G3, 1, REST, 3 };
+  note_t measure_8[] = { C4, 1, C4, 1, REST, 1, C4, 1, REST, 1, C4, 1, D4, 1, E4, 1, REST, 7 };
 
   measure_t measures_list[] = { {.data = NULL, .length = 0},
-                                {.data = measures_1, .length = 24},
-                                {.data = measures_2, .length = 26},
-                                {.data = measures_3, .length = 30},
-                                {.data = measures_4, .length = 30},
-                                {.data = measures_5, .length = 26},
-                                {.data = measures_6, .length = 14},
-                                {.data = measures_7, .length = 28},
-                                {.data = measures_8, .length = 18}
+                                {.data = measure_1, .length = 24},
+                                {.data = measure_2, .length = 26},
+                                {.data = measure_3, .length = 30},
+                                {.data = measure_4, .length = 30},
+                                {.data = measure_5, .length = 26},
+                                {.data = measure_6, .length = 14},
+                                {.data = measure_7, .length = 28},
+                                {.data = measure_8, .length = 18}
                               };
 
   unsigned char super_mario_measure_sequence[] = { 1, 2, 3, 2, 3, 4, 5, 4, 6, 4, 5, 4, 6, 7, 8, 7 };
 
   play_measures(measures_list, super_mario_measure_sequence, 16);
+}
+
+/**
+  * @brief  Play Bobomb Battlefield measures
+  * @retval None
+  */
+void play_bobomb_battlefield_song(void) {
+  note_t measure_1[] = { C5, 2, A4, 2, C5, 2, D5, 1, C5, 1, REST, 1, E4, 3, F4, 2, Fs4, 2 };
+  note_t measure_2[] = { G4, 3, REST, 1, G4, 1, G3, 2, G4, 2, REST, 5, D5, 1, Eb5, 1 };
+  note_t measure_3[] = { E5, 1, Eb5, 1, E5, 1, G5, 2, A5, 1, G5, 2, C5, 4, REST, 2, G4, 1, Ab4, 1 };
+  note_t measure_4[] = { A4, 1, Ab4, 1, A4, 1, C5, 2, D5, 1, C5, 2, A4, 4, REST, 2, A4, 2 };
+  note_t measure_5[] = { G4, 1, E4, 1, G4, 1, G5, 1, REST, 2, G4, 1, E4, 1, G4, 1, G5, 1, REST, 2, G4, 1, E4, 1, G4, 1, G5, 1 };
+  note_t measure_6[] = { REST, 2, G5, 2, A5, 1, G5, 2, D5, 5, REST, 2, D4, 1, Eb4, 1 };
+  note_t measure_7[] = { E4, 1, Eb4, 1, E4, 1, G4, 2, A4, 1, G4, 2, Bb4, 4, REST, 2, Ab4, 2 };
+  note_t measure_8[] = { A4, 1, Ab4, 1, A4, 1, C5, 2, D5, 1, C5, 2, A4, 4, REST, 2, A4, 2 };
+  note_t measure_9[] = { G4, 1, Fs4, 1, G4, 1, G3, 1, REST, 2, G4, 1, Fs4, 1, G4, 1, G3, 1, REST, 1, Eb4, 1, E4, 2, E4, 2 };
+  note_t measure_10[] = { C4, 12, REST, 4 };
+
+  measure_t measures_list[] = { {.data = NULL, .length = 0},
+                                {.data = measure_1, .length = 18},
+                                {.data = measure_2, .length = 16},
+                                {.data = measure_3, .length = 20},
+                                {.data = measure_4, .length = 18},
+                                {.data = measure_5, .length = 28},
+                                {.data = measure_6, .length = 16},
+                                {.data = measure_7, .length = 18},
+                                {.data = measure_8, .length = 18},
+                                {.data = measure_9, .length = 26},
+                                {.data = measure_10, .length = 4},
+                              };
+  unsigned char super_bobomb_battlefield_sequence[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+  play_measures(measures_list, super_bobomb_battlefield_sequence, 10);
 }
 
 /**
@@ -126,6 +159,11 @@ void play_song(song_t song) {
     case SUPER_MARIO:
       set_bpm(150);
       play_super_mario_song();
+    break;
+
+    case BOBOMB_BATTLEFIELD:
+      set_bpm(110);
+      play_bobomb_battlefield_song();
     break;
 
     default:
