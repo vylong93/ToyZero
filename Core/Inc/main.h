@@ -59,6 +59,53 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define LED_ONBOARD_Pin GPIO_PIN_13
+#define LED_ONBOARD_GPIO_Port GPIOC
+#define BATT_SENSE_Pin GPIO_PIN_1
+#define BATT_SENSE_GPIO_Port GPIOA
+#define LED1_Pin GPIO_PIN_2
+#define LED1_GPIO_Port GPIOA
+#define LED3_Pin GPIO_PIN_3
+#define LED3_GPIO_Port GPIOA
+#define LED5_Pin GPIO_PIN_0
+#define LED5_GPIO_Port GPIOB
+#define LED7_Pin GPIO_PIN_1
+#define LED7_GPIO_Port GPIOB
+#define LED2_Pin GPIO_PIN_10
+#define LED2_GPIO_Port GPIOB
+#define LED4_Pin GPIO_PIN_11
+#define LED4_GPIO_Port GPIOB
+#define LED6_Pin GPIO_PIN_12
+#define LED6_GPIO_Port GPIOB
+#define BUTTON5_Pin GPIO_PIN_13
+#define BUTTON5_GPIO_Port GPIOB
+#define BUTTON5_EXTI_IRQn EXTI15_10_IRQn
+#define BUTTON6_Pin GPIO_PIN_14
+#define BUTTON6_GPIO_Port GPIOB
+#define BUTTON6_EXTI_IRQn EXTI15_10_IRQn
+#define BUTTON7_Pin GPIO_PIN_15
+#define BUTTON7_GPIO_Port GPIOB
+#define BUTTON7_EXTI_IRQn EXTI15_10_IRQn
+#define RED_CHANNEL_Pin GPIO_PIN_8
+#define RED_CHANNEL_GPIO_Port GPIOA
+#define GREEN_CHANNEL_Pin GPIO_PIN_9
+#define GREEN_CHANNEL_GPIO_Port GPIOA
+#define BLUE_CHANNEL_Pin GPIO_PIN_10
+#define BLUE_CHANNEL_GPIO_Port GPIOA
+#define BUTTON4_Pin GPIO_PIN_5
+#define BUTTON4_GPIO_Port GPIOB
+#define BUTTON4_EXTI_IRQn EXTI9_5_IRQn
+#define BUTTON2_Pin GPIO_PIN_6
+#define BUTTON2_GPIO_Port GPIOB
+#define BUTTON2_EXTI_IRQn EXTI9_5_IRQn
+#define BUTTON3_Pin GPIO_PIN_7
+#define BUTTON3_GPIO_Port GPIOB
+#define BUTTON3_EXTI_IRQn EXTI9_5_IRQn
+#define BUTTON1_Pin GPIO_PIN_8
+#define BUTTON1_GPIO_Port GPIOB
+#define BUTTON1_EXTI_IRQn EXTI9_5_IRQn
+#define BUZZER_Pin GPIO_PIN_9
+#define BUZZER_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
