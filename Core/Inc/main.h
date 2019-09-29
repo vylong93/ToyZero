@@ -67,6 +67,12 @@ void Error_Handler(void);
 #define LED1_GPIO_Port GPIOA
 #define LED3_Pin GPIO_PIN_3
 #define LED3_GPIO_Port GPIOA
+#define LATCH_7SEG_Pin GPIO_PIN_4
+#define LATCH_7SEG_GPIO_Port GPIOA
+#define CLOCK_7SEG_Pin GPIO_PIN_5
+#define CLOCK_7SEG_GPIO_Port GPIOA
+#define DATA_7SEG_Pin GPIO_PIN_7
+#define DATA_7SEG_GPIO_Port GPIOA
 #define LED5_Pin GPIO_PIN_0
 #define LED5_GPIO_Port GPIOB
 #define LED7_Pin GPIO_PIN_1
