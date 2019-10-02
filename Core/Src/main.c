@@ -25,6 +25,7 @@
 /* USER CODE BEGIN Includes */
 #include "music_player.h"
 #include "leds_driver.h"
+#include "sevenseg_driver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -112,10 +113,9 @@ int main(void)
   MX_ADC1_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-  for (int i = 0; i < 3; i ++) {
-    blinkLedOnBoard();
-  }
   init_rgb_driver();
+  test_sevenseg_tube();
+  play_song(PRINCESS_SLIDE);
   test_all_rgb_leds();
   /* USER CODE END 2 */
 
@@ -126,17 +126,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    if (test_all_rgb_leds_flag) {
-      test_all_rgb_leds();
-      play_song(PRINCESS_SLIDE);
-    }
-    if (test_rgb_rainbow_flag) {
-      test_rgb_rainbow(led0);
-      play_song(BOBOMB_BATTLEFIELD);
-    }
-    if (test_play_song_flag) {
-      play_song(SUPER_MARIO);
-    }
+    blinkLedOnBoard();
   }
   /* USER CODE END 3 */
 }
