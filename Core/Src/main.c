@@ -26,6 +26,7 @@
 #include "music_player.h"
 #include "leds_driver.h"
 #include "sevenseg_driver.h"
+#include "analog_module.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -117,6 +118,8 @@ int main(void)
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
   init_rgb_driver();
+  turnOnDisplay();
+  setDisplayIdle();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -127,6 +130,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     blinkLedOnBoard();
+    setDisplayNumber(getBatteryPercentage());
   }
   /* USER CODE END 3 */
 }
