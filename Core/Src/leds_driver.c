@@ -94,7 +94,7 @@ static const unsigned char lights[360]={
   */
 void set_rgb_sineLED(int angle)
 {
-  set_rgb(lights[(angle+120)%360], lights[angle],  lights[(angle+240)%360]);
+  set_rgb(lights[(angle+120)%360] >> 1, lights[angle] >> 1,  lights[(angle+240)%360] >> 1);
 }
 #endif /* ENABLE_SINE */
 
