@@ -72,6 +72,8 @@ volatile int g_buttonRecord[] = { 0, 0, 0, 0, 0, 0, 0 };
 volatile int g_newRecordUpdate = 0;
 volatile int g_expectedIndexBuffer[32] = { 0 };
 volatile note_t g_playbackNodeBuffer[32] = { 0 };
+volatile uint32_t g_currentScore = 0;
+volatile uint32_t g_lastHighestScore = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -208,7 +210,7 @@ void runningTestMode(void) {
 }
 void runningStartingState(void) {
   turnOnDisplay();
-  setDisplayText(DIGIT_O, DIGIT_O, DIGIT_O, DIGIT_O);
+  setDisplayNumber(g_lastHighestScore);
   beep();
   _enableAllInputButtons();
 
@@ -245,11 +247,10 @@ void _clearButtonRecord(void) {
 }
 void runningPlayState (void) {
   song_t targetSong = SUPER_MARIO;
-  int remainLive = 0;
-  uint32_t score = 0;
-
+  signed int remainLive = 0;
   int measure_length = 0;
   measure_t* measures_list = NULL;
+  unsigned int current_bpm = 100;
 
   /* Preparing level */
   _disableAllInputButtons();
@@ -259,6 +260,7 @@ void runningPlayState (void) {
       setDisplayText(DIGIT_E, DIGIT_DASH, DIGIT_NONE, DIGIT_NONE);
       remainLive = 0;
       targetSong = SUPER_MARIO;
+      current_bpm = 60;
       audio_transition_starting_to_easy();
       measures_list = get_mario_measures_list(&measure_length);
     break;
@@ -267,6 +269,7 @@ void runningPlayState (void) {
       setDisplayText(DIGIT_N, DIGIT_DASH, DIGIT_DASH, DIGIT_NONE);
       remainLive = 0; // 3
       targetSong = BOBOMB_BATTLEFIELD;
+      current_bpm = 100;
       audio_transition_starting_to_normal();
       measures_list = get_mario_measures_list(&measure_length);
     break;
@@ -275,6 +278,7 @@ void runningPlayState (void) {
       setDisplayText(DIGIT_H, DIGIT_DASH, DIGIT_DASH, DIGIT_DASH);
       remainLive = 0;
       targetSong = PRINCESS_SLIDE;
+      current_bpm = 120;
       audio_transition_starting_to_hard();
       measures_list = get_mario_measures_list(&measure_length);
     break;
@@ -283,7 +287,7 @@ void runningPlayState (void) {
     break;
   }
 
-  unsigned int current_bpm = 60;
+  g_currentScore = 0;
   turnOnDisplay();
 
   while (!g_newStateUpdate) {
@@ -307,17 +311,16 @@ void runningPlayState (void) {
       for (int j = 0; (j < expectedPointer) && (remainLive >= 0); j++) {
         g_newRecordUpdate = 0;
         _clearButtonRecord();
-        setDisplayNumber(score);
+        setDisplayNumber(g_currentScore);
         _enableAllInputButtons();
         turnOnDisplay();
         while (!g_newRecordUpdate);
         _disableAllInputButtons();
 
         if (g_buttonRecord[g_expectedIndexBuffer[j]] == 1) {
-          setDisplayNumber(++score);
+          setDisplayNumber(++g_currentScore);
           play_with_led(g_playbackNodeBuffer[j], 1);
           _clearButtonRecord();
-          remainLive = score; /* MARIO only */
         } else {
           --remainLive;
           if (remainLive < 0) {
@@ -338,10 +341,14 @@ void runningPlayState (void) {
 }
 void runningGameOverState (void) {
   audio_transition_gameover();
-
+  g_lastHighestScore = (g_currentScore > g_lastHighestScore) ? (g_currentScore) : (g_lastHighestScore);
+  setDisplayNumber(g_currentScore);
+  /* Blinking current score */
   while (!g_newStateUpdate) {
     turnOnDisplay();
-    setDisplayNumber(6969);
+    HAL_Delay(500);
+    turnOffDisplay();
+    HAL_Delay(500);
   }
 
   /* Clean up */
