@@ -161,8 +161,17 @@ void runningTestMode(void) {
   setDisplayIdle();
   turn_on_all_leds();
   while (!g_newStateUpdate) {
-    test_rgb_rainbow();
+    for (int k = 0; (g_newStateUpdate == 0) && (k < 360); k++)
+    {
+      set_rgb_sineLED(k);
+      HAL_Delay(30);
+    }
   }
+
+  /* Clean up */
+  g_newStateUpdate = 0;
+  turn_off_all_leds();
+  turnOffDisplay();
 }
 
 /* USER CODE END 0 */
@@ -219,6 +228,21 @@ int main(void)
     switch (g_state) {
       case TEST_MODE:
         runningTestMode();
+      break;
+
+      case START_GAME:
+        turnOnDisplay();
+        setDisplayNumber(100);
+      break;
+
+      case PLAYING:
+        turnOnDisplay();
+        setDisplayNumber(9090);
+      break;
+
+      case GAME_OVER:
+        turnOnDisplay();
+        setDisplayNumber(6969);
       break;
 
       default:
@@ -662,7 +686,30 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   switch  (GPIO_Pin) {
     case ACT_BUTTON_Pin:
-      setDisplayNumber(0);
+      switch (g_state) {
+        case TEST_MODE:
+          g_state = START_GAME;
+          g_newStateUpdate = 1;
+        break;
+
+        case START_GAME:
+          g_state = START_GAME;
+          g_newStateUpdate = 0;
+        break;
+
+        case PLAYING:
+          g_state = START_GAME;
+          g_newStateUpdate = 1;
+        break;
+
+        case GAME_OVER:
+          g_state = START_GAME;
+          g_newStateUpdate = 1;
+        break;
+
+        default:
+        break;
+      }
     break;
 
     case BUTTON1_Pin:
