@@ -92,6 +92,13 @@ void set_bpm(unsigned int bpm);
 void play(note_t note, unsigned int duration_ticks);
 void play_song(song_t song);
 
+void beep(void);
+void audio_transistion_back(void);
+void audio_transition_starting_to_easy(void);
+void audio_transition_starting_to_normal(void);
+void audio_transition_starting_to_hard(void);
+void audio_transition_gameover(void);
+
 #ifdef __cplusplus
 }
 #endif

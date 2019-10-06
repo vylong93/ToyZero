@@ -216,4 +216,66 @@ void play_song(song_t song) {
   }
 }
 
+
+/**
+  * @brief  Play a beep sound
+  * @retval None
+  */
+void beep(void) {
+  set_bpm(150);
+  play(D5, 1);
+}
+
+/**
+  * @brief  Play a beep sound
+  * @retval None
+  */
+void audio_transistion_back(void) {
+  set_bpm(150);
+  play(A4, 1);
+  play(D4, 1);
+}
+
+/**
+  * @brief  Play a beep sound
+  * @retval None
+  */
+void audio_transition_starting_to_easy(void) {
+  set_bpm(150);
+  play(D4, 1);
+  play(A4, 1);
+}
+
+/**
+  * @brief  Play a beep sound
+  * @retval None
+  */
+void audio_transition_starting_to_normal(void) {
+  set_bpm(150);
+  play(D4, 1);
+  play(D5, 1);
+}
+
+/**
+  * @brief  Play a beep sound
+  * @retval None
+  */
+void audio_transition_starting_to_hard(void) {
+  set_bpm(150);
+  play(D4, 1);
+  play(D4, 1);
+  play(D5, 1);
+}
+
+/**
+  * @brief  Play a beep sound
+  * @retval None
+  */
+void audio_transition_gameover(void) {
+  set_bpm(150);
+  play(E4, 1);
+  play(D4, 1);
+  play(C4, 1);
+}
+
 /***************************************************************END OF FILE****/
