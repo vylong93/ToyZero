@@ -80,6 +80,44 @@ void blinkLedOnBoard()
     HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
     HAL_Delay(999);
 }
+void renderBatteryPercentage(void) {
+  uint32_t battPercent = getBatteryPercentage();
+  setDisplayNumber(battPercent);
+  if (battPercent > 57) {  /* Battery High - GREEN */
+    set_rgb(0, 255, 0);
+    for (int i = 0; i < 2; i++) {
+      turn_on_all_leds();
+      HAL_Delay(500);
+      turn_off_all_leds();
+      HAL_Delay(500);
+    }
+  } else if (battPercent > 28) {
+    set_rgb(100, 100, 0); /* Battery Medium - GREEN */
+    for (int i = 0; i < 4; i++) {
+      turn_led_on(led1);
+      turn_led_on(led2);
+      turn_led_on(led3);
+      turn_led_on(led4);
+      HAL_Delay(200);
+      turn_led_off(led1);
+      turn_led_off(led2);
+      turn_led_off(led3);
+      turn_led_off(led4);
+      HAL_Delay(200);
+    }
+  } else {
+    set_rgb(50, 0, 0); /* Battery Low - GREEN */
+    for (int i = 0; i < 10; i++) {
+      turn_led_on(led1);
+      turn_led_on(led2);
+      HAL_Delay(100);
+      turn_led_off(led1);
+      turn_led_off(led2);
+      HAL_Delay(100);
+    }
+  }
+  turnOffDisplay();
+}
 /* USER CODE END 0 */
 
 /**
@@ -120,6 +158,8 @@ int main(void)
   init_rgb_driver();
   turnOnDisplay();
   setDisplayIdle();
+  renderBatteryPercentage();
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -130,7 +170,6 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     blinkLedOnBoard();
-    setDisplayNumber(getBatteryPercentage());
   }
   /* USER CODE END 3 */
 }
