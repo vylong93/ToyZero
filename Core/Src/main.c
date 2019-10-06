@@ -747,13 +747,13 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 
-  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 4, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
-  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 4, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 }
@@ -810,7 +810,15 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     break;
 
     case BUTTON1_Pin:
-      setDisplayNumber(1);
+      switch (g_state) {
+        case PLAYING:
+        break;
+
+        default:
+          setDisplayNumber(1);
+          audio_button_1();
+        break;
+      }
     break;
 
     case BUTTON2_Pin:
@@ -821,14 +829,26 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
           g_newStateUpdate = 1;
         break;
 
+        case PLAYING:
+        break;
+
         default:
           setDisplayNumber(2);
+          audio_button_2();
         break;
       }
     break;
 
     case BUTTON3_Pin:
-      setDisplayNumber(3);
+      switch (g_state) {
+        case PLAYING:
+        break;
+
+        default:
+          setDisplayNumber(3);
+          audio_button_3();
+        break;
+      }
     break;
 
     case BUTTON4_Pin:
@@ -839,14 +859,26 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
           g_newStateUpdate = 1;
         break;
 
+        case PLAYING:
+        break;
+
         default:
           setDisplayNumber(4);
+          audio_button_4();
         break;
       }
     break;
 
     case BUTTON5_Pin:
-      setDisplayNumber(5);
+      switch (g_state) {
+        case PLAYING:
+        break;
+
+        default:
+          setDisplayNumber(5);
+          audio_button_5();
+        break;
+      }
     break;
 
     case BUTTON6_Pin:
@@ -857,19 +889,41 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
           g_newStateUpdate = 1;
         break;
 
+        case PLAYING:
+        break;
+
         default:
           setDisplayNumber(6);
+          audio_button_6();
         break;
       }
     break;
 
     case BUTTON7_Pin:
-      setDisplayNumber(7);
+      switch (g_state) {
+        case PLAYING:
+        break;
+
+        default:
+          setDisplayNumber(7);
+          audio_button_7();
+        break;
+      }
     break;
 
     default:
     break;
   }
+
+  /* Make sure to clear all button noise before exit */
+  __HAL_GPIO_EXTI_CLEAR_IT(ACT_BUTTON_Pin);
+  __HAL_GPIO_EXTI_CLEAR_IT(BUTTON1_Pin);
+  __HAL_GPIO_EXTI_CLEAR_IT(BUTTON2_Pin);
+  __HAL_GPIO_EXTI_CLEAR_IT(BUTTON3_Pin);
+  __HAL_GPIO_EXTI_CLEAR_IT(BUTTON4_Pin);
+  __HAL_GPIO_EXTI_CLEAR_IT(BUTTON5_Pin);
+  __HAL_GPIO_EXTI_CLEAR_IT(BUTTON6_Pin);
+  __HAL_GPIO_EXTI_CLEAR_IT(BUTTON7_Pin);
 }
 /* USER CODE END 4 */
 
