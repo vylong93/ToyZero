@@ -20,12 +20,15 @@ extern "C" {
 
 #include "stm32f1xx_hal.h"
 
+#define TUBE_LENGTH (4)
+
 /* Common Anode 7-segment LEDS tube */
 #define SEGLED_0 0x01
 #define SEGLED_1 0x02
 #define SEGLED_2 0x04
 #define SEGLED_3 0x08
 
+#define DIGIT_DASH 0xBF
 #define DIGIT_DOT 0x7F
 #define DIGIT_NONE 0xFF
 #define DIGIT_0 0xC0
@@ -50,6 +53,7 @@ void turnOffDisplay(void);
 void displayNumber(uint8_t position, uint8_t number);
 void test_sevenseg_tube(void);
 
+void setDisplayIdle(void);
 void setDisplayNumber(uint32_t value);
 void performSevenSegOneStepScan(void);
 

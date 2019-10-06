@@ -19,7 +19,9 @@ extern TIM_HandleTypeDef htim3; /* main.c */
 static uint8_t g_numberDigits[10] = {DIGIT_0, DIGIT_1, DIGIT_2, DIGIT_3, DIGIT_4,
                                      DIGIT_5, DIGIT_6, DIGIT_7, DIGIT_8, DIGIT_9};
 
+static uint32_t g_useNumber = 0;
 static uint32_t g_displayValue = 4321;
+static uint8_t g_displayBuffer[TUBE_LENGTH] = { DIGIT_DOT, DIGIT_DOT, DIGIT_DOT, DIGIT_DOT };
 
 /**
   * @brief  Display a digit in a specific position
@@ -63,6 +65,7 @@ void displayNumber(uint8_t position, uint8_t number)
   position = 1 << position; /* Convert to SEGLED_X */
   number = g_numberDigits[number % 10];
   displayDigit(position, number);
+  g_useNumber = 1;
 }
 
 /**
@@ -86,6 +89,17 @@ void test_sevenseg_tube(void)
 }
 
 /**
+  * @brief  Set the display to dash - - - -
+  * @retval None
+  */
+void setDisplayIdle(void) {
+  for (int i = 0; i < TUBE_LENGTH; i++) {
+    g_displayBuffer[i] = DIGIT_DASH;
+  }
+  g_useNumber = 0;
+}
+
+/**
   * @brief  Set the display value of seven segment tube
   * @param  value in decimal format, maxium 4 digits
   * @retval None
@@ -93,6 +107,7 @@ void test_sevenseg_tube(void)
 void setDisplayNumber(uint32_t value) {
   /* TODO: protection */
   g_displayValue = value;
+  g_useNumber = 1;
 }
 
 /**
@@ -102,6 +117,33 @@ void setDisplayNumber(uint32_t value) {
   */
 void performSevenSegOneStepScan(void) {
   static int i = 0;
+
+  if (g_useNumber == 0) { // TODO: split function
+    switch (i) {
+      case 1:
+        displayDigit(SEGLED_0, g_displayBuffer[0]);
+      break;
+
+      case 2:
+        displayDigit(SEGLED_1, g_displayBuffer[1]);
+      break;
+
+      case 3:
+        displayDigit(SEGLED_2, g_displayBuffer[2]);
+      break;
+
+      case 4:
+        displayDigit(SEGLED_3, g_displayBuffer[3]);
+      break;
+
+      default:
+        i = 0;
+      break;
+    }
+    ++i;
+    return;
+  }
+
   /* TODO: use power(10, i) instead of if else */
   switch (i) {
     case 1:
