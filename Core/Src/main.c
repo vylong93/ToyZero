@@ -37,6 +37,12 @@ typedef enum game_state {
   PLAYING,
   GAME_OVER
 } game_state_t;
+
+typedef enum game_level {
+  EASY = 0,
+  MEDIUM,
+  HARD
+} game_level_t;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -59,8 +65,9 @@ TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
 
 /* USER CODE BEGIN PV */
-volatile game_state_t g_state = TEST_MODE;
+volatile game_state_t g_state = START_GAME;
 volatile int g_newStateUpdate = 0;
+volatile game_level_t g_level = EASY;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -173,7 +180,35 @@ void runningTestMode(void) {
   turn_off_all_leds();
   turnOffDisplay();
 }
+void runningStartingState(void) {
+  turnOnDisplay();
+  setDisplayText(DIGIT_O, DIGIT_O, DIGIT_O, DIGIT_O);
 
+  while (!g_newStateUpdate) {
+    /* EASY */
+    set_rgb(255, 50, 0);
+    turn_led_on(led2);
+    HAL_Delay(5);
+    turn_off_all_leds();
+
+    /* MEDIUM */
+    set_rgb(0, 150, 150);
+    turn_led_on(led4);
+    HAL_Delay(5);
+    turn_off_all_leds();
+
+    /* HARD */
+    set_rgb(152, 0, 152);
+    turn_led_on(led6);
+    HAL_Delay(5);
+    turn_off_all_leds();
+  }
+
+  /* Clean up */
+  g_newStateUpdate = 0;
+  turn_off_all_leds();
+  turnOffDisplay();
+}
 /* USER CODE END 0 */
 
 /**
@@ -231,13 +266,27 @@ int main(void)
       break;
 
       case START_GAME:
-        turnOnDisplay();
-        setDisplayNumber(100);
+        runningStartingState();
       break;
 
       case PLAYING:
         turnOnDisplay();
-        setDisplayNumber(9090);
+        switch (g_level) {
+          case EASY:
+            setDisplayNumber(90);
+          break;
+
+          case MEDIUM:
+            setDisplayNumber(990);
+          break;
+
+          case HARD:
+            setDisplayNumber(9999);
+          break;
+
+          default:
+          break;
+        }
       break;
 
       case GAME_OVER:
@@ -717,7 +766,17 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     break;
 
     case BUTTON2_Pin:
-      setDisplayNumber(2);
+      switch (g_state) {
+        case START_GAME:
+          g_level = EASY;
+          g_state = PLAYING;
+          g_newStateUpdate = 1;
+        break;
+
+        default:
+          setDisplayNumber(2);
+        break;
+      }
     break;
 
     case BUTTON3_Pin:
@@ -725,7 +784,17 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     break;
 
     case BUTTON4_Pin:
-      setDisplayNumber(4);
+      switch (g_state) {
+        case START_GAME:
+          g_level = MEDIUM;
+          g_state = PLAYING;
+          g_newStateUpdate = 1;
+        break;
+
+        default:
+          setDisplayNumber(4);
+        break;
+      }
     break;
 
     case BUTTON5_Pin:
@@ -733,7 +802,17 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     break;
 
     case BUTTON6_Pin:
-      setDisplayNumber(6);
+      switch (g_state) {
+        case START_GAME:
+          g_level = HARD;
+          g_state = PLAYING;
+          g_newStateUpdate = 1;
+        break;
+
+        default:
+          setDisplayNumber(6);
+        break;
+      }
     break;
 
     case BUTTON7_Pin:
