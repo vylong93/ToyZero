@@ -13,6 +13,7 @@
   */
 
 #include "music_player.h"
+#include "leds_driver.h"
 #include "stm32f1xx_hal.h"
 
 extern TIM_HandleTypeDef htim4; /* main.c */
@@ -63,6 +64,105 @@ void play(note_t note, unsigned int duration_ticks) {
 
     /* Disable sound output. */
     HAL_TIM_OC_Stop_IT(&htim4, TIM_CHANNEL_4);
+  }
+
+  /* Wait for the full duration to expire. */
+  while (ms_elapsed < duration_ms);
+}
+
+/**
+  * @brief  Plays the passed note for the given duration (in ticks, see TICKS PER BEAT).
+  *         Blocks until the note is over. If note is REST, we just don't play a note for the duration.
+  * @param  note target note to play
+  * @param  duration_ticks number of ticks for this note
+  * @retval None
+  */
+led_rgb_t _get_led_position_from_note (note_t node) {
+  if ((node == C4) || (node == Cs4) || (node == C5) || (node == Cs5)) {
+    return led1;
+  }
+  if ((node == Db4) || (node == D4) || (node == Ds4) || (node == Db5) || (node == D5) || (node == Ds5)) {
+    return led2;
+  }
+  if ((node == E3) || (node == Eb4) || (node == E4) || (node == Eb5) || (node == E5) || (node == Fs3)) {
+    return led3;
+  }
+  if ((node == F4) || (node == Fs4) || (node == F5) || (node == Fs5)) {
+    return led4;
+  }
+  if ((node == G3) || (node == Gs3) || (node == Gb4) || (node == G4) || (node == Gs4) || (node == Gb5) || (node == G5) || (node == Gs5)) {
+    return led5;
+  }
+  if ((node == A3) || (node == As3) || (node == Ab4) || (node == A4) || (node == As4) || (node == Ab5) || (node == A5)) {
+    return led6;
+  }
+  if ((node == B3) || (node == Bb4) || (node == B4)) {
+    return led7;
+  }
+  return led1; /* REST */
+}
+void _set_rgb_color_base_on_led (led_rgb_t led) {
+  switch (led) {
+    case led1:
+      set_rgb(255, 0, 0);
+      break;
+    case led2:
+      set_rgb(255, 100, 0);
+      break;
+    case led3:
+      set_rgb(255, 255, 0);
+      break;
+    case led4:
+      set_rgb(0, 255, 0);
+      break;
+    case led5:
+      set_rgb(0, 0, 255);
+      break;
+    case led6:
+      set_rgb(55, 0, 255);
+      break;
+    case led7:
+      set_rgb(255, 0, 255);
+      break;
+    default:
+      set_rgb(0, 0, 0);
+      break;
+  }
+}
+void play_with_led(note_t note, unsigned int duration_ticks) {
+  unsigned int duration_ms = 0;
+  led_rgb_t led = _get_led_position_from_note(note);
+
+  /* Compute the duration (in ms). */
+  duration_ms = duration_ticks * ms_per_tick;
+
+  if (note == REST) {
+    /* Disable sound output. */
+    HAL_TIM_OC_Stop_IT(&htim4, TIM_CHANNEL_4);
+  } else {
+    /* Set the current note. */
+    current_note = (unsigned int)note;
+
+    /* Light corresponding led */
+    _set_rgb_color_base_on_led(led);
+    turn_led_on(led);
+
+    /* Enable the sound ouput. */
+    HAL_TIM_OC_Start_IT(&htim4, TIM_CHANNEL_4);
+  }
+
+  /* Reset the elapsed counter. */
+  ms_elapsed = 0;
+
+  if (note != REST) {
+    /* Wait for the note duration to expire. */
+    while (ms_elapsed < duration_ms - DEAD_TIME_MS);
+
+    /* Disable sound output. */
+    HAL_TIM_OC_Stop_IT(&htim4, TIM_CHANNEL_4);
+
+    /* Off coresponding led */
+    turn_led_off(led);
   }
 
   /* Wait for the full duration to expire. */
@@ -278,5 +378,13 @@ void audio_transition_gameover(void) {
   play(D4, 2);
   play(C4, 2);
 }
+
+void audio_button_1(void) { set_bpm(150); play(C4, 1); }
+void audio_button_2(void) { set_bpm(150); play(D4, 1); }
+void audio_button_3(void) { set_bpm(150); play(E4, 1); }
+void audio_button_4(void) { set_bpm(150); play(F4, 1); }
+void audio_button_5(void) { set_bpm(150); play(G4, 1); }
+void audio_button_6(void) { set_bpm(150); play(A4, 1); }
+void audio_button_7(void) { set_bpm(150); play(B4, 1); }
 
 /***************************************************************END OF FILE****/

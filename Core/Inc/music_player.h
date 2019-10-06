@@ -92,12 +92,22 @@ void set_bpm(unsigned int bpm);
 void play(note_t note, unsigned int duration_ticks);
 void play_song(song_t song);
 
+void play_with_led(note_t note, unsigned int duration_ticks);
+
 void beep(void);
 void audio_transistion_back(void);
 void audio_transition_starting_to_easy(void);
 void audio_transition_starting_to_normal(void);
 void audio_transition_starting_to_hard(void);
 void audio_transition_gameover(void);
+
+void audio_button_1(void);
+void audio_button_2(void);
+void audio_button_3(void);
+void audio_button_4(void);
+void audio_button_5(void);
+void audio_button_6(void);
+void audio_button_7(void);
 
 #ifdef __cplusplus
 }
