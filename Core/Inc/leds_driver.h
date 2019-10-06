@@ -22,22 +22,23 @@ extern "C" {
 
 #include "stm32f1xx_hal.h"
 
-/* Port: B; Pin: { 13, 14, 15 }
- * TODO add port param
- */
+#define NUMBER_OF_LEDS  (7)
+
 typedef enum led_rgb {
-  led0 = GPIO_PIN_13,
-  led1 = GPIO_PIN_14,
-  led2 = GPIO_PIN_15,
+  led1 = 0, led2, led3, led4, led5, led6, led7
 } led_rgb_t;
 
 void init_rgb_driver(void);
-void set_rgb(led_rgb_t led, unsigned char r, unsigned char g, unsigned char b);
+void turn_led_on(led_rgb_t led);
+void turn_led_off(led_rgb_t led);
+void turn_on_all_leds(void);
+void turn_off_all_leds(void);
+void set_rgb(unsigned char r, unsigned char g, unsigned char b);
 void test_all_rgb_leds(void);
-void set_rgb_trueHSV(led_rgb_t led, int angle);
-void set_rgb_powerHSV(led_rgb_t led, int angle);
-void set_rgb_sineLED(led_rgb_t led, int angle);
-void test_rgb_rainbow(led_rgb_t led);
+void set_rgb_trueHSV(int angle);
+void set_rgb_powerHSV(int angle);
+void set_rgb_sineLED(int angle);
+void test_rgb_rainbow(void);
 
 #ifdef __cplusplus
 }
