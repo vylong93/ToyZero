@@ -31,7 +31,12 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+typedef enum game_state {
+  TEST_MODE = 0,
+  START_GAME,
+  PLAYING,
+  GAME_OVER
+} game_state_t;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -57,6 +62,9 @@ TIM_HandleTypeDef htim4;
 volatile char test_all_rgb_leds_flag = 0;
 volatile char test_rgb_rainbow_flag = 0;
 volatile char test_play_song_flag = 0;
+
+volatile game_state_t g_state = TEST_MODE;
+volatile int g_newStateUpdate = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -118,6 +126,49 @@ void renderBatteryPercentage(void) {
   }
   turnOffDisplay();
 }
+void _test_all_in_one (unsigned char r, unsigned char g, unsigned char b,
+  led_rgb_t led, note_t note, unsigned int duration_ticks,
+  unsigned char no_sound, uint32_t display_value) {
+  set_rgb(r, g, b);
+  setDisplayNumber(display_value);
+  turn_led_on(led);
+  if (no_sound) {
+    HAL_Delay(200); /* BPM 150 */
+  } else {
+    play(note, duration_ticks);
+  }
+  turn_led_off(led);
+}
+void runningTestMode(void) {
+  uint32_t duration_ticks = 2;
+  unsigned char no_sound = 0;
+  set_bpm(150);
+  setDisplayNumber(0);
+  turnOnDisplay();
+
+  /* Up */
+  _test_all_in_one(255, 0, 0, led1, C4, duration_ticks, no_sound, 1);
+  _test_all_in_one(255, 100, 0, led2, D4, duration_ticks, no_sound, 2);
+  _test_all_in_one(255, 255, 0, led3, E4, duration_ticks, no_sound, 3);
+  _test_all_in_one(0, 255, 0, led4, F4, duration_ticks, no_sound, 4);
+  _test_all_in_one(0, 0, 255, led5, G4, duration_ticks, no_sound, 5);
+  _test_all_in_one(55, 0, 255, led6, A4, duration_ticks, no_sound, 6);
+  _test_all_in_one(255, 0, 255, led7, B4, duration_ticks, no_sound, 7);
+  /* Down */
+  _test_all_in_one(55, 0, 255, led6, A4, duration_ticks, no_sound, 6);
+  _test_all_in_one(0, 0, 255, led5, G4, duration_ticks, no_sound, 5);
+  _test_all_in_one(0, 255, 0, led4, F4, duration_ticks, no_sound, 4);
+  _test_all_in_one(255, 255, 0, led3, E4, duration_ticks, no_sound, 3);
+  _test_all_in_one(255, 100, 0, led2, D4, duration_ticks, no_sound, 2);
+  _test_all_in_one(255, 0, 0, led1, C4, duration_ticks, no_sound, 1);
+
+  setDisplayIdle();
+  turn_on_all_leds();
+  while (!g_newStateUpdate) {
+    test_rgb_rainbow();
+  }
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -169,7 +220,15 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    blinkLedOnBoard();
+    switch (g_state) {
+      case TEST_MODE:
+        runningTestMode();
+      break;
+
+      default:
+        blinkLedOnBoard();
+      break;
+    }
   }
   /* USER CODE END 3 */
 }
