@@ -541,7 +541,7 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
   if (TIM4 == htim->Instance) {
     htim4.Instance->CCR4 += current_note;
   } else if (TIM3 == htim->Instance) {
-    htim3.Instance->CCR3 += 4000; /* TODO: 4ms */
+    htim3.Instance->CCR3 += 8000; /* TODO: 4ms */
     performSevenSegOneStepScan();
   }
 }
