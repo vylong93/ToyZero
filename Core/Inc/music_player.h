@@ -88,11 +88,14 @@ typedef enum Song {
   PRINCESS_SLIDE = 2,
 } song_t;
 
+measure_t* get_mario_measures_list(int *length);
+
 void set_bpm(unsigned int bpm);
 void play(note_t note, unsigned int duration_ticks);
 void play_song(song_t song);
 
 void play_with_led(note_t note, unsigned int duration_ticks);
+int get_button_index_from_node(note_t node);
 
 void beep(void);
 void audio_transistion_back(void);

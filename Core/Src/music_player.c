@@ -22,6 +22,39 @@ static unsigned int ms_per_tick = 0; /* Reference for playing speed */
 volatile unsigned int ms_elapsed = 0; /* Keeps track of the number of ms elapsed. */
 volatile unsigned int current_note = G4; /* Keeps track of the current note we're playing. */
 
+/* EASY SONG: Super MARIO */
+note_t mario_measure_1[] = { E4, 1, E4, 1, REST, 1, E4, 1 }; //8
+note_t mario_measure_2[] = { REST, 1, C4, 1, E4, 1, REST, 1, G4, 1, REST, 3, G3, 1, REST, 3 }; //16
+note_t mario_measure_3[] = { C4, 1, REST, 2, G3, 1, REST, 2, E3, 1, REST, 2, A3, 1, REST, 1, B3, 1 }; //18
+note_t mario_measure_4[] = { REST, 1, As3, 1, A3, 1, REST, 1, G3, 1, E4, 1, REST, 1, G4, 1 }; //16
+note_t mario_measure_5[] = { A4, 1, REST, 1, F4, 1, G4, 1, REST, 1, E4, 1, REST, 1, C4, 1 }; // 16
+note_t mario_measure_6[] = { D4, 1, B3, 1, REST, 2, REST, 2, G4, 1, Fs4, 1 }; //12
+note_t mario_measure_7[] = { F4, 1, Ds4, 1, REST, 1, E4, 1, REST, 1, Gs3, 1, A3, 1, C4, 1 }; //16
+note_t mario_measure_8[] = { REST, 1, A3, 1, C4, 1, D4, 1, REST, 2, G4, 1, Fs4, 1 }; // 14
+note_t mario_measure_9[] = { F4, 1, Fs4, 1, REST, 1, E4, 1, REST, 1, C5, 1, REST, 1, C5, 1 }; // 16
+note_t mario_measure_10[] = { C5, 1, REST, 3, REST, 2, Eb4, 1, REST, 2, D4, 1, REST, 2, C4, 1, REST, 7 }; // 18
+note_t mario_measure_11[] = { C4, 1, C4, 1, REST, 1, C4, 1, REST, 1, C4, 1, D4, 1, REST, 1 }; // 16
+note_t mario_measure_12[] = { E4, 1, C4, 1, REST, 1, A3, 1, G3, 1, REST, 3, C4, 1, C4, 1, REST, 1, C4, 1 }; // 20
+note_t mario_measure_13[] = { REST, 1, C4, 1, D4, 1, E4, 1, REST, 7 }; // 10
+measure_t mario_measures_list[] = { {.data = mario_measure_1, .length = 8},
+                                    {.data = mario_measure_2, .length = 16},
+                                    {.data = mario_measure_3, .length = 18},
+                                    {.data = mario_measure_4, .length = 16},
+                                    {.data = mario_measure_5, .length = 16},
+                                    {.data = mario_measure_6, .length = 12},
+                                    {.data = mario_measure_7, .length = 16},
+                                    {.data = mario_measure_8, .length = 14},
+                                    {.data = mario_measure_9, .length = 16},
+                                    {.data = mario_measure_10, .length = 18},
+                                    {.data = mario_measure_11, .length = 18},
+                                    {.data = mario_measure_12, .length = 20},
+                                    {.data = mario_measure_13, .length = 10}};
+
+measure_t* get_mario_measures_list(int *length) {
+  *length = 13;
+  return mario_measures_list;
+}
+
 /**
   * @brief  Sets the tempo in BPM (beats per minute) at which the music will play back.
   * @param  bpm Number of Beat Per Minute
@@ -100,6 +133,31 @@ led_rgb_t _get_led_position_from_note (note_t node) {
     return led7;
   }
   return led1; /* REST */
+}
+
+int get_button_index_from_node (note_t node) {
+  if ((node == C4) || (node == Cs4) || (node == C5) || (node == Cs5)) {
+    return 0;
+  }
+  if ((node == Db4) || (node == D4) || (node == Ds4) || (node == Db5) || (node == D5) || (node == Ds5)) {
+    return 1;
+  }
+  if ((node == E3) || (node == Eb4) || (node == E4) || (node == Eb5) || (node == E5) || (node == Fs3)) {
+    return 2;
+  }
+  if ((node == F4) || (node == Fs4) || (node == F5) || (node == Fs5)) {
+    return 3;
+  }
+  if ((node == G3) || (node == Gs3) || (node == Gb4) || (node == G4) || (node == Gs4) || (node == Gb5) || (node == G5) || (node == Gs5)) {
+    return 4;
+  }
+  if ((node == A3) || (node == As3) || (node == Ab4) || (node == A4) || (node == As4) || (node == Ab5) || (node == A5)) {
+    return 5;
+  }
+  if ((node == B3) || (node == Bb4) || (node == B4)) {
+    return 6;
+  }
+  return 0; /* REST */
 }
 
 void play_with_led(note_t note, unsigned int duration_ticks) {
