@@ -84,6 +84,11 @@ static void MX_TIM3_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void setGameState(game_state_t state) {
+  game_state_t old_state = g_state;
+  g_state = state;
+  g_newStateUpdate = (old_state != g_state) ? (1) : (0);
+}
 void blinkLedOnBoard()
 {
     HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
@@ -219,14 +224,14 @@ void runningPlayState (void) {
   switch (g_level) {
     case EASY:
       setDisplayText(DIGIT_E, DIGIT_DASH, DIGIT_NONE, DIGIT_NONE);
-      remainLive = 5;
+      remainLive = 0; // 5
       targetSong = SUPER_MARIO;
       audio_transition_starting_to_easy();
     break;
 
     case NORMAL:
       setDisplayText(DIGIT_N, DIGIT_DASH, DIGIT_DASH, DIGIT_NONE);
-      remainLive = 3;
+      remainLive = 0; // 3
       targetSong = BOBOMB_BATTLEFIELD;
       audio_transition_starting_to_normal();
     break;
@@ -249,8 +254,7 @@ void runningPlayState (void) {
 
     --remainLive;
     if (remainLive <= 0) {
-      g_state = GAME_OVER;
-      g_newStateUpdate = 1;
+      setGameState(GAME_OVER);
       break;
     }
   }
@@ -784,25 +788,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     case ACT_BUTTON_Pin:
       switch (g_state) {
         case TEST_MODE:
-          g_state = START_GAME;
-          g_newStateUpdate = 1;
-        break;
-
         case START_GAME:
-          g_state = START_GAME;
-          g_newStateUpdate = 0;
-        break;
-
         case PLAYING:
-          g_state = START_GAME;
-          g_newStateUpdate = 1;
-        break;
-
         case GAME_OVER:
-          g_state = START_GAME;
-          g_newStateUpdate = 1;
-        break;
-
+          setGameState(START_GAME);
         default:
         break;
       }
@@ -810,103 +799,47 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
     case BUTTON1_Pin:
       switch (g_state) {
-        case PLAYING:
-        break;
-
-        default:
-          setDisplayNumber(1);
-          audio_button_1();
-        break;
+        case PLAYING: break;
+        default: setDisplayNumber(1); audio_button_1(); break;
       }
     break;
-
     case BUTTON2_Pin:
       switch (g_state) {
-        case START_GAME:
-          g_level = EASY;
-          g_state = PLAYING;
-          g_newStateUpdate = 1;
-        break;
-
-        case PLAYING:
-        break;
-
-        default:
-          setDisplayNumber(2);
-          audio_button_2();
-        break;
+        case START_GAME: g_level = EASY; setGameState(PLAYING); break;
+        case PLAYING: break;
+        default: setDisplayNumber(2); audio_button_2(); break;
       }
     break;
-
     case BUTTON3_Pin:
       switch (g_state) {
-        case PLAYING:
-        break;
-
-        default:
-          setDisplayNumber(3);
-          audio_button_3();
-        break;
+        case PLAYING: break;
+        default: setDisplayNumber(3); audio_button_3(); break;
       }
     break;
-
     case BUTTON4_Pin:
       switch (g_state) {
-        case START_GAME:
-          g_level = NORMAL;
-          g_state = PLAYING;
-          g_newStateUpdate = 1;
-        break;
-
-        case PLAYING:
-        break;
-
-        default:
-          setDisplayNumber(4);
-          audio_button_4();
-        break;
+        case START_GAME: g_level = NORMAL; setGameState(PLAYING); break;
+        case PLAYING: break;
+        default: setDisplayNumber(4); audio_button_4(); break;
       }
     break;
-
     case BUTTON5_Pin:
       switch (g_state) {
-        case PLAYING:
-        break;
-
-        default:
-          setDisplayNumber(5);
-          audio_button_5();
-        break;
+        case PLAYING: break;
+        default: setDisplayNumber(5); audio_button_5(); break;
       }
     break;
-
     case BUTTON6_Pin:
       switch (g_state) {
-        case START_GAME:
-          g_level = HARD;
-          g_state = PLAYING;
-          g_newStateUpdate = 1;
-        break;
-
-        case PLAYING:
-        break;
-
-        default:
-          setDisplayNumber(6);
-          audio_button_6();
-        break;
+        case START_GAME: g_level = HARD; setGameState(PLAYING); break;
+        case PLAYING: break;
+        default: setDisplayNumber(6); audio_button_6(); break;
       }
     break;
-
     case BUTTON7_Pin:
       switch (g_state) {
-        case PLAYING:
-        break;
-
-        default:
-          setDisplayNumber(7);
-          audio_button_7();
-        break;
+        case PLAYING: break;
+        default: setDisplayNumber(7); audio_button_7(); break;
       }
     break;
 
