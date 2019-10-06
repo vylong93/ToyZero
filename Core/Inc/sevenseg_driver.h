@@ -45,9 +45,13 @@ extern "C" {
 #define DIGIT_E 0x86
 #define DIGIT_F 0x8E
 
+void turnOnDisplay(void);
 void turnOffDisplay(void);
-void displayDigit(uint8_t position, uint8_t value);
+void displayNumber(uint8_t position, uint8_t number);
 void test_sevenseg_tube(void);
+
+void setDisplayNumber(uint32_t value);
+void performSevenSegOneStepScan(void);
 
 #ifdef __cplusplus
 }
