@@ -313,7 +313,7 @@ int main(void)
   MX_SPI1_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
-  HAL_Delay(300); /* For battery power stable */
+  blinkLedOnBoard(); /* For battery power stable */
   init_rgb_driver();
   turnOnDisplay();
   setDisplayIdle();
