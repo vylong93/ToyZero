@@ -114,9 +114,6 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
   init_rgb_driver();
-  test_sevenseg_tube();
-  play_song(PRINCESS_SLIDE);
-  test_all_rgb_leds();
   /* USER CODE END 2 */
 
   /* Infinite loop */
