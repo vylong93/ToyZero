@@ -180,7 +180,7 @@ void play_with_led(note_t note, unsigned int duration_ticks) {
 void play_measures(measure_t* measures_list, unsigned char* measure_sequence, int sequence_length) {
   for (int i = 0; i < sequence_length; i++) {
     for (int j = 0; j < measures_list[measure_sequence[i]].length; j += 2) {
-      play(measures_list[measure_sequence[i]].data[j], measures_list[measure_sequence[i]].data[j + 1]);
+      play_with_led(measures_list[measure_sequence[i]].data[j], measures_list[measure_sequence[i]].data[j + 1]);
     }
   }
 }
