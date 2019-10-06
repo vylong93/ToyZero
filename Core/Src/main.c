@@ -68,6 +68,10 @@ TIM_HandleTypeDef htim4;
 volatile game_state_t g_state = TEST_MODE;
 volatile int g_newStateUpdate = 0;
 volatile game_level_t g_level = EASY;
+volatile int g_buttonRecord[] = { 0, 0, 0, 0, 0, 0, 0 };
+volatile int g_newRecordUpdate = 0;
+volatile int g_expectedIndexBuffer[32] = { 0 };
+volatile note_t g_playbackNodeBuffer[32] = { 0 };
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -96,7 +100,23 @@ void blinkLedOnBoard()
     HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
     HAL_Delay(999);
 }
+void _disableAllInputButtons(void) {
+  HAL_NVIC_DisableIRQ(EXTI9_5_IRQn);
+  HAL_NVIC_DisableIRQ(EXTI15_10_IRQn);
+}
+void _enableAllInputButtons(void) {
+  __HAL_GPIO_EXTI_CLEAR_IT(BUTTON1_Pin);
+  __HAL_GPIO_EXTI_CLEAR_IT(BUTTON2_Pin);
+  __HAL_GPIO_EXTI_CLEAR_IT(BUTTON3_Pin);
+  __HAL_GPIO_EXTI_CLEAR_IT(BUTTON4_Pin);
+  __HAL_GPIO_EXTI_CLEAR_IT(BUTTON5_Pin);
+  __HAL_GPIO_EXTI_CLEAR_IT(BUTTON6_Pin);
+  __HAL_GPIO_EXTI_CLEAR_IT(BUTTON7_Pin);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+}
 void renderBatteryPercentage(void) {
+  _disableAllInputButtons();
   uint32_t battPercent = getBatteryPercentage();
   setDisplayNumber(battPercent);
   if (battPercent > 57) {  /* Battery High - GREEN */
@@ -151,6 +171,7 @@ void runningTestMode(void) {
   unsigned char no_sound = 0;
   setDisplayNumber(0);
   turnOnDisplay();
+  _enableAllInputButtons();
   set_bpm(150);
 
   /* Up */
@@ -180,6 +201,7 @@ void runningTestMode(void) {
   }
 
   /* Clean up */
+  _disableAllInputButtons();
   g_newStateUpdate = 0;
   turn_off_all_leds();
   turnOffDisplay();
@@ -188,6 +210,7 @@ void runningStartingState(void) {
   turnOnDisplay();
   setDisplayText(DIGIT_O, DIGIT_O, DIGIT_O, DIGIT_O);
   beep();
+  _enableAllInputButtons();
 
   while (!g_newStateUpdate) {
     /* EASY */
@@ -210,23 +233,34 @@ void runningStartingState(void) {
   }
 
   /* Clean up */
+  _disableAllInputButtons();
   g_newStateUpdate = 0;
   turn_off_all_leds();
   turnOffDisplay();
 }
+void _clearButtonRecord(void) {
+  for (int i = 0; i < 7; i++) {
+    g_buttonRecord[i] = 0;
+  }
+}
 void runningPlayState (void) {
   song_t targetSong = SUPER_MARIO;
   int remainLive = 0;
+  uint32_t score = 0;
 
-  turnOnDisplay();
+  int measure_length = 0;
+  measure_t* measures_list = NULL;
 
   /* Preparing level */
+  _disableAllInputButtons();
+  _clearButtonRecord();
   switch (g_level) {
     case EASY:
       setDisplayText(DIGIT_E, DIGIT_DASH, DIGIT_NONE, DIGIT_NONE);
-      remainLive = 0; // 5
+      remainLive = 0;
       targetSong = SUPER_MARIO;
       audio_transition_starting_to_easy();
+      measures_list = get_mario_measures_list(&measure_length);
     break;
 
     case NORMAL:
@@ -234,6 +268,7 @@ void runningPlayState (void) {
       remainLive = 0; // 3
       targetSong = BOBOMB_BATTLEFIELD;
       audio_transition_starting_to_normal();
+      measures_list = get_mario_measures_list(&measure_length);
     break;
 
     case HARD:
@@ -241,22 +276,60 @@ void runningPlayState (void) {
       remainLive = 0;
       targetSong = PRINCESS_SLIDE;
       audio_transition_starting_to_hard();
+      measures_list = get_mario_measures_list(&measure_length);
     break;
 
     default:
     break;
   }
 
+  unsigned int current_bpm = 60;
+  turnOnDisplay();
+
   while (!g_newStateUpdate) {
     HAL_Delay(500);
-    play_song(targetSong);
-    HAL_Delay(500);
+    set_bpm(current_bpm);
 
-    --remainLive;
-    if (remainLive <= 0) {
-      setGameState(GAME_OVER);
-      break;
+    uint32_t expectedPointer = 0;
+    g_newRecordUpdate = 0;
+    for (int i = 0; (i < measure_length) && (remainLive >= 0); i++) {
+      expectedPointer = 0;
+      for (int j = 0; j < measures_list[i].length; j += 2) { /* maximum lenght is 32 */
+        turnOffDisplay();
+        if (measures_list[i].data[j] != REST) {
+          g_expectedIndexBuffer[expectedPointer] = get_button_index_from_node(measures_list[i].data[j]);
+          g_playbackNodeBuffer[expectedPointer] = measures_list[i].data[j];
+          ++expectedPointer;
+        }
+        play_with_led(measures_list[i].data[j], measures_list[i].data[j + 1]);
+      }
+
+      for (int j = 0; (j < expectedPointer) && (remainLive >= 0); j++) {
+        g_newRecordUpdate = 0;
+        _clearButtonRecord();
+        setDisplayNumber(score);
+        _enableAllInputButtons();
+        turnOnDisplay();
+        while (!g_newRecordUpdate);
+        _disableAllInputButtons();
+
+        if (g_buttonRecord[g_expectedIndexBuffer[j]] == 1) {
+          setDisplayNumber(++score);
+          play_with_led(g_playbackNodeBuffer[j], 1);
+          _clearButtonRecord();
+          remainLive = score; /* MARIO only */
+        } else {
+          --remainLive;
+          if (remainLive < 0) {
+            setGameState(GAME_OVER);
+          }
+        }
+        g_newRecordUpdate = 0;
+      }
+      HAL_Delay(250);
     }
+    /* WINNING */
+    current_bpm += 30;
   }
 
   /* Clean up */
@@ -799,46 +872,46 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
     case BUTTON1_Pin:
       switch (g_state) {
-        case PLAYING: break;
+        case PLAYING: g_buttonRecord[0] = 1; g_newRecordUpdate = 1; break;
         default: setDisplayNumber(1); audio_button_1(); break;
       }
     break;
     case BUTTON2_Pin:
       switch (g_state) {
         case START_GAME: g_level = EASY; setGameState(PLAYING); break;
-        case PLAYING: break;
+        case PLAYING: g_buttonRecord[1] = 1; g_newRecordUpdate = 1; break;
         default: setDisplayNumber(2); audio_button_2(); break;
       }
     break;
     case BUTTON3_Pin:
       switch (g_state) {
-        case PLAYING: break;
+        case PLAYING: g_buttonRecord[2] = 1; g_newRecordUpdate = 1; break;
         default: setDisplayNumber(3); audio_button_3(); break;
       }
     break;
     case BUTTON4_Pin:
       switch (g_state) {
         case START_GAME: g_level = NORMAL; setGameState(PLAYING); break;
-        case PLAYING: break;
+        case PLAYING: g_buttonRecord[3] = 1; g_newRecordUpdate = 1; break;
         default: setDisplayNumber(4); audio_button_4(); break;
       }
     break;
     case BUTTON5_Pin:
       switch (g_state) {
-        case PLAYING: break;
+        case PLAYING: g_buttonRecord[4] = 1; g_newRecordUpdate = 1; break;
         default: setDisplayNumber(5); audio_button_5(); break;
       }
     break;
     case BUTTON6_Pin:
       switch (g_state) {
         case START_GAME: g_level = HARD; setGameState(PLAYING); break;
-        case PLAYING: break;
+        case PLAYING: g_buttonRecord[5] = 1; g_newRecordUpdate = 1; break;
         default: setDisplayNumber(6); audio_button_6(); break;
       }
     break;
     case BUTTON7_Pin:
       switch (g_state) {
-        case PLAYING: break;
+        case PLAYING: g_buttonRecord[6] = 1; g_newRecordUpdate = 1; break;
         default: setDisplayNumber(7); audio_button_7(); break;
       }
     break;
