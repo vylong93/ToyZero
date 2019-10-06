@@ -28,7 +28,9 @@ extern "C" {
 #define SEGLED_2 0x04
 #define SEGLED_3 0x08
 
+#define DIGIT_H 0x89
 #define DIGIT_O 0x9C
+#define DIGIT_N 0xAB
 #define DIGIT_EXC 0x79
 
 #define DIGIT_DASH 0xBF
