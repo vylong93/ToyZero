@@ -28,6 +28,9 @@ extern "C" {
 #define SEGLED_2 0x04
 #define SEGLED_3 0x08
 
+#define DIGIT_O 0x9C
+#define DIGIT_EXC 0x79
+
 #define DIGIT_DASH 0xBF
 #define DIGIT_DOT 0x7F
 #define DIGIT_NONE 0xFF
@@ -53,6 +56,7 @@ void turnOffDisplay(void);
 void test_sevenseg_tube(void);
 
 void setDisplayIdle(void);
+void setDisplayText(uint8_t T3, uint8_t T2, uint8_t T1, uint8_t T0);
 void setDisplayNumber(uint32_t value);
 void performSevenSegOneStepScan(void);
 

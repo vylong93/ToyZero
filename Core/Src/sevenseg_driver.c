@@ -100,6 +100,22 @@ void setDisplayIdle(void) {
 }
 
 /**
+  * @brief  Set the display image of seven segment tube
+  * @param  T3 character display on SEGLED_3
+  * @param  T2 character display on SEGLED_2
+  * @param  T1 character display on SEGLED_1
+  * @param  T0 character display on SEGLED_0
+  * @retval None
+  */
+void setDisplayText(uint8_t T3, uint8_t T2, uint8_t T1, uint8_t T0) {
+  g_displayBuffer[0] = T0;
+  g_displayBuffer[1] = T1;
+  g_displayBuffer[2] = T2;
+  g_displayBuffer[3] = T3;
+  g_useNumber = 0;
+}
+
+/**
   * @brief  Set the display value of seven segment tube
   * @param  value in decimal format, maxium 4 digits
   * @retval None
