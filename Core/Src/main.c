@@ -65,7 +65,7 @@ TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
 
 /* USER CODE BEGIN PV */
-volatile game_state_t g_state = START_GAME;
+volatile game_state_t g_state = TEST_MODE;
 volatile int g_newStateUpdate = 0;
 volatile game_level_t g_level = EASY;
 /* USER CODE END PV */
@@ -145,7 +145,6 @@ void _test_all_in_one (unsigned char r, unsigned char g, unsigned char b,
 void runningTestMode(void) {
   uint32_t duration_ticks = 2;
   unsigned char no_sound = 0;
-  set_bpm(150);
   setDisplayNumber(0);
   turnOnDisplay();
 
@@ -179,6 +178,7 @@ void runningTestMode(void) {
   g_newStateUpdate = 0;
   turn_off_all_leds();
   turnOffDisplay();
+  play(D5, 1);
 }
 void runningStartingState(void) {
   turnOnDisplay();
@@ -208,6 +208,27 @@ void runningStartingState(void) {
   g_newStateUpdate = 0;
   turn_off_all_leds();
   turnOffDisplay();
+  switch (g_level) {
+    case EASY:
+      play(D4, 1);
+      play(A4, 1);
+      break;
+
+    case MEDIUM:
+      play(D4, 1);
+      play(D5, 1);
+      break;
+
+    case HARD:
+      play(D4, 1);
+      play(D4, 1);
+      play(D5, 1);
+      break;
+
+    default:
+      play(D5, 1);
+      break;
+  }
 }
 /* USER CODE END 0 */
 
@@ -247,6 +268,7 @@ int main(void)
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
   init_rgb_driver();
+  set_bpm(150);
   turnOnDisplay();
   setDisplayIdle();
   renderBatteryPercentage();
