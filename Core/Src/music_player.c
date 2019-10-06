@@ -101,34 +101,7 @@ led_rgb_t _get_led_position_from_note (note_t node) {
   }
   return led1; /* REST */
 }
-void _set_rgb_color_base_on_led (led_rgb_t led) {
-  switch (led) {
-    case led1:
-      set_rgb(255, 0, 0);
-      break;
-    case led2:
-      set_rgb(255, 100, 0);
-      break;
-    case led3:
-      set_rgb(255, 255, 0);
-      break;
-    case led4:
-      set_rgb(0, 255, 0);
-      break;
-    case led5:
-      set_rgb(0, 0, 255);
-      break;
-    case led6:
-      set_rgb(55, 0, 255);
-      break;
-    case led7:
-      set_rgb(255, 0, 255);
-      break;
-    default:
-      set_rgb(0, 0, 0);
-      break;
-  }
-}
+
 void play_with_led(note_t note, unsigned int duration_ticks) {
   unsigned int duration_ms = 0;
   led_rgb_t led = _get_led_position_from_note(note);
@@ -144,7 +117,7 @@ void play_with_led(note_t note, unsigned int duration_ticks) {
     current_note = (unsigned int)note;
 
     /* Light corresponding led */
-    _set_rgb_color_base_on_led(led);
+    set_rgb_color_base_on_led(led);
     turn_led_on(led);
 
     /* Enable the sound ouput. */

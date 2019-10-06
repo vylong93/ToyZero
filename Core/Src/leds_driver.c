@@ -94,7 +94,7 @@ static const unsigned char lights[360]={
   */
 void set_rgb_sineLED(int angle)
 {
-  set_rgb(lights[(angle+120)%360] >> 1, lights[angle] >> 1,  lights[(angle+240)%360] >> 1);
+  set_rgb(lights[(angle+120)%360] >> 2, lights[angle] >> 2,  lights[(angle+240)%360] >> 2);
 }
 #endif /* ENABLE_SINE */
 
@@ -252,6 +252,40 @@ void test_rgb_rainbow(void)
 #endif /* ENABLE_HSV_POWER */
 #endif /* ENABLE_SINE */
     HAL_Delay(30);
+  }
+}
+
+/**
+  * @brief  Led position color mapping
+  * @param  led target led position convert to color
+  * @retval None
+  */
+void set_rgb_color_base_on_led(led_rgb_t led) {
+  switch (led) {
+    case led1:
+      set_rgb(150, 0, 0);
+      break;
+    case led2:
+      set_rgb(150, 40, 0);
+      break;
+    case led3:
+      set_rgb(150, 150, 0);
+      break;
+    case led4:
+      set_rgb(0, 150, 0);
+      break;
+    case led5:
+      set_rgb(0, 0, 150);
+      break;
+    case led6:
+      set_rgb(20, 0, 150);
+      break;
+    case led7:
+      set_rgb(150, 0, 150);
+      break;
+    default:
+      set_rgb(0, 0, 0);
+      break;
   }
 }
 

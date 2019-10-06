@@ -95,7 +95,7 @@ void renderBatteryPercentage(void) {
   uint32_t battPercent = getBatteryPercentage();
   setDisplayNumber(battPercent);
   if (battPercent > 57) {  /* Battery High - GREEN */
-    set_rgb(0, 255, 0);
+    set_rgb(0, 50, 0);
     for (int i = 0; i < 2; i++) {
       turn_on_all_leds();
       HAL_Delay(500);
@@ -103,7 +103,7 @@ void renderBatteryPercentage(void) {
       HAL_Delay(500);
     }
   } else if (battPercent > 28) {
-    set_rgb(100, 100, 0); /* Battery Medium - GREEN */
+    set_rgb(50, 50, 0); /* Battery Medium - YELLOW */
     for (int i = 0; i < 4; i++) {
       turn_led_on(led1);
       turn_led_on(led2);
@@ -117,7 +117,7 @@ void renderBatteryPercentage(void) {
       HAL_Delay(200);
     }
   } else {
-    set_rgb(50, 0, 0); /* Battery Low - GREEN */
+    set_rgb(50, 0, 0); /* Battery Low - RED */
     for (int i = 0; i < 10; i++) {
       turn_led_on(led1);
       turn_led_on(led2);
@@ -129,10 +129,9 @@ void renderBatteryPercentage(void) {
   }
   turnOffDisplay();
 }
-void _test_all_in_one (unsigned char r, unsigned char g, unsigned char b,
-  led_rgb_t led, note_t note, unsigned int duration_ticks,
+void _test_all_in_one (led_rgb_t led, note_t note, unsigned int duration_ticks,
   unsigned char no_sound, uint32_t display_value) {
-  set_rgb(r, g, b);
+  set_rgb_color_base_on_led(led);
   setDisplayNumber(display_value);
   turn_led_on(led);
   if (no_sound) {
@@ -150,20 +149,20 @@ void runningTestMode(void) {
   set_bpm(150);
 
   /* Up */
-  _test_all_in_one(255, 0, 0, led1, C4, duration_ticks, no_sound, 1);
-  _test_all_in_one(255, 100, 0, led2, D4, duration_ticks, no_sound, 2);
-  _test_all_in_one(255, 255, 0, led3, E4, duration_ticks, no_sound, 3);
-  _test_all_in_one(0, 255, 0, led4, F4, duration_ticks, no_sound, 4);
-  _test_all_in_one(0, 0, 255, led5, G4, duration_ticks, no_sound, 5);
-  _test_all_in_one(55, 0, 255, led6, A4, duration_ticks, no_sound, 6);
-  _test_all_in_one(255, 0, 255, led7, B4, duration_ticks, no_sound, 7);
+  _test_all_in_one(led1, C4, duration_ticks, no_sound, 1);
+  _test_all_in_one(led2, D4, duration_ticks, no_sound, 2);
+  _test_all_in_one(led3, E4, duration_ticks, no_sound, 3);
+  _test_all_in_one(led4, F4, duration_ticks, no_sound, 4);
+  _test_all_in_one(led5, G4, duration_ticks, no_sound, 5);
+  _test_all_in_one(led6, A4, duration_ticks, no_sound, 6);
+  _test_all_in_one(led7, B4, duration_ticks, no_sound, 7);
   /* Down */
-  _test_all_in_one(55, 0, 255, led6, A4, duration_ticks, no_sound, 6);
-  _test_all_in_one(0, 0, 255, led5, G4, duration_ticks, no_sound, 5);
-  _test_all_in_one(0, 255, 0, led4, F4, duration_ticks, no_sound, 4);
-  _test_all_in_one(255, 255, 0, led3, E4, duration_ticks, no_sound, 3);
-  _test_all_in_one(255, 100, 0, led2, D4, duration_ticks, no_sound, 2);
-  _test_all_in_one(255, 0, 0, led1, C4, duration_ticks, no_sound, 1);
+  _test_all_in_one(led6, A4, duration_ticks, no_sound, 6);
+  _test_all_in_one(led5, G4, duration_ticks, no_sound, 5);
+  _test_all_in_one(led4, F4, duration_ticks, no_sound, 4);
+  _test_all_in_one(led3, E4, duration_ticks, no_sound, 3);
+  _test_all_in_one(led2, D4, duration_ticks, no_sound, 2);
+  _test_all_in_one(led1, C4, duration_ticks, no_sound, 1);
 
   setDisplayIdle();
   turn_on_all_leds();
