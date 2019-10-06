@@ -40,7 +40,7 @@ typedef enum game_state {
 
 typedef enum game_level {
   EASY = 0,
-  MEDIUM,
+  NORMAL,
   HARD
 } game_level_t;
 /* USER CODE END PTD */
@@ -147,6 +147,7 @@ void runningTestMode(void) {
   unsigned char no_sound = 0;
   setDisplayNumber(0);
   turnOnDisplay();
+  set_bpm(150);
 
   /* Up */
   _test_all_in_one(255, 0, 0, led1, C4, duration_ticks, no_sound, 1);
@@ -178,11 +179,11 @@ void runningTestMode(void) {
   g_newStateUpdate = 0;
   turn_off_all_leds();
   turnOffDisplay();
-  play(D5, 1);
 }
 void runningStartingState(void) {
   turnOnDisplay();
   setDisplayText(DIGIT_O, DIGIT_O, DIGIT_O, DIGIT_O);
+  beep();
 
   while (!g_newStateUpdate) {
     /* EASY */
@@ -191,7 +192,7 @@ void runningStartingState(void) {
     HAL_Delay(5);
     turn_off_all_leds();
 
-    /* MEDIUM */
+    /* NORMAl */
     set_rgb(0, 150, 150);
     turn_led_on(led4);
     HAL_Delay(5);
@@ -208,28 +209,70 @@ void runningStartingState(void) {
   g_newStateUpdate = 0;
   turn_off_all_leds();
   turnOffDisplay();
+}
+void runningPlayState (void) {
+  song_t targetSong = SUPER_MARIO;
+  int remainLive = 0;
+
+  turnOnDisplay();
+
+  /* Preparing level */
   switch (g_level) {
     case EASY:
-      play(D4, 1);
-      play(A4, 1);
-      break;
+      setDisplayText(DIGIT_E, DIGIT_DASH, DIGIT_NONE, DIGIT_NONE);
+      remainLive = 5;
+      targetSong = SUPER_MARIO;
+      audio_transition_starting_to_easy();
+    break;
 
-    case MEDIUM:
-      play(D4, 1);
-      play(D5, 1);
-      break;
+    case NORMAL:
+      setDisplayText(DIGIT_N, DIGIT_DASH, DIGIT_DASH, DIGIT_NONE);
+      remainLive = 3;
+      targetSong = BOBOMB_BATTLEFIELD;
+      audio_transition_starting_to_normal();
+    break;
 
     case HARD:
-      play(D4, 1);
-      play(D4, 1);
-      play(D5, 1);
-      break;
+      setDisplayText(DIGIT_H, DIGIT_DASH, DIGIT_DASH, DIGIT_DASH);
+      remainLive = 0;
+      targetSong = PRINCESS_SLIDE;
+      audio_transition_starting_to_hard();
+    break;
 
     default:
-      play(D5, 1);
-      break;
+    break;
   }
+
+  while (!g_newStateUpdate) {
+    HAL_Delay(500);
+    play_song(targetSong);
+    HAL_Delay(500);
+
+    --remainLive;
+    if (remainLive <= 0) {
+      g_state = GAME_OVER;
+      g_newStateUpdate = 1;
+      break;
+    }
+  }
+
+  /* Clean up */
+  g_newStateUpdate = 0;
+  turnOffDisplay();
 }
+void runningGameOverState (void) {
+  audio_transition_gameover();
+
+  while (!g_newStateUpdate) {
+    turnOnDisplay();
+    setDisplayNumber(6969);
+  }
+
+  /* Clean up */
+  g_newStateUpdate = 0;
+  turnOffDisplay();
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -267,8 +310,8 @@ int main(void)
   MX_SPI1_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
+  HAL_Delay(300); /* For battery power stable */
   init_rgb_driver();
-  set_bpm(150);
   turnOnDisplay();
   setDisplayIdle();
   renderBatteryPercentage();
@@ -292,28 +335,11 @@ int main(void)
       break;
 
       case PLAYING:
-        turnOnDisplay();
-        switch (g_level) {
-          case EASY:
-            setDisplayNumber(90);
-          break;
-
-          case MEDIUM:
-            setDisplayNumber(990);
-          break;
-
-          case HARD:
-            setDisplayNumber(9999);
-          break;
-
-          default:
-          break;
-        }
+        runningPlayState();
       break;
 
       case GAME_OVER:
-        turnOnDisplay();
-        setDisplayNumber(6969);
+        runningGameOverState();
       break;
 
       default:
@@ -808,7 +834,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     case BUTTON4_Pin:
       switch (g_state) {
         case START_GAME:
-          g_level = MEDIUM;
+          g_level = NORMAL;
           g_state = PLAYING;
           g_newStateUpdate = 1;
         break;
