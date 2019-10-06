@@ -26,7 +26,7 @@ volatile unsigned int current_note = G4; /* Keeps track of the current note we'r
   * @param  bpm Number of Beat Per Minute
   * @retval None
   */
-static void set_bpm(unsigned int bpm) {
+void set_bpm(unsigned int bpm) {
   ms_per_tick = 60000 / (TICKS_PER_BEAT * bpm);
 }
 
@@ -37,7 +37,7 @@ static void set_bpm(unsigned int bpm) {
   * @param  duration_ticks number of ticks for this note
   * @retval None
   */
-static void play(note_t note, unsigned int duration_ticks) {
+void play(note_t note, unsigned int duration_ticks) {
   unsigned int duration_ms = 0;
 
   /* Compute the duration (in ms). */

@@ -88,6 +88,8 @@ typedef enum Song {
   PRINCESS_SLIDE = 2,
 } song_t;
 
+void set_bpm(unsigned int bpm);
+void play(note_t note, unsigned int duration_ticks);
 void play_song(song_t song);
 
 #ifdef __cplusplus
