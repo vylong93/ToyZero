@@ -50,7 +50,6 @@ extern "C" {
 
 void turnOnDisplay(void);
 void turnOffDisplay(void);
-void displayNumber(uint8_t position, uint8_t number);
 void test_sevenseg_tube(void);
 
 void setDisplayIdle(void);

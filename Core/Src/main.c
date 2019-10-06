@@ -59,10 +59,6 @@ TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
 
 /* USER CODE BEGIN PV */
-volatile char test_all_rgb_leds_flag = 0;
-volatile char test_rgb_rainbow_flag = 0;
-volatile char test_play_song_flag = 0;
-
 volatile game_state_t g_state = TEST_MODE;
 volatile int g_newStateUpdate = 0;
 /* USER CODE END PV */
@@ -592,6 +588,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LED_ONBOARD_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : ACT_BUTTON_Pin */
+  GPIO_InitStruct.Pin = ACT_BUTTON_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(ACT_BUTTON_GPIO_Port, &GPIO_InitStruct);
+
   /*Configure GPIO pins : RGB_LED1_Pin RGB_LED2_Pin */
   GPIO_InitStruct.Pin = RGB_LED1_Pin|RGB_LED2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
@@ -624,6 +626,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
@@ -656,29 +661,36 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   switch  (GPIO_Pin) {
-    case GPIO_PIN_5:
-    test_rgb_rainbow_flag = 0;
-    test_play_song_flag = 0;
-    test_all_rgb_leds_flag = 0;
-    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+    case ACT_BUTTON_Pin:
+      setDisplayNumber(0);
     break;
 
-    case GPIO_PIN_6:
-    test_rgb_rainbow_flag = 0;
-    test_play_song_flag = 0;
-    test_all_rgb_leds_flag ^= 1;
+    case BUTTON1_Pin:
+      setDisplayNumber(1);
     break;
 
-    case GPIO_PIN_7:
-    test_all_rgb_leds_flag = 0;
-    test_play_song_flag = 0;
-    test_rgb_rainbow_flag ^= 1;
+    case BUTTON2_Pin:
+      setDisplayNumber(2);
     break;
 
-    case GPIO_PIN_8:
-    test_all_rgb_leds_flag = 0;
-    test_rgb_rainbow_flag = 0;
-    test_play_song_flag ^= 1;
+    case BUTTON3_Pin:
+      setDisplayNumber(3);
+    break;
+
+    case BUTTON4_Pin:
+      setDisplayNumber(4);
+    break;
+
+    case BUTTON5_Pin:
+      setDisplayNumber(5);
+    break;
+
+    case BUTTON6_Pin:
+      setDisplayNumber(6);
+    break;
+
+    case BUTTON7_Pin:
+      setDisplayNumber(7);
     break;
 
     default:

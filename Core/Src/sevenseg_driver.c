@@ -60,7 +60,7 @@ void turnOffDisplay(void) {
   * @param  number to display from 0 to 9
   * @retval None
   */
-void displayNumber(uint8_t position, uint8_t number)
+static void displayNumber(uint8_t position, uint8_t number)
 {
   position = 1 << position; /* Convert to SEGLED_X */
   number = g_numberDigits[number % 10];
