@@ -273,9 +273,10 @@ void audio_transition_starting_to_hard(void) {
   */
 void audio_transition_gameover(void) {
   set_bpm(150);
+  play(F4, 1);
   play(E4, 1);
-  play(D4, 1);
-  play(C4, 1);
+  play(D4, 2);
+  play(C4, 2);
 }
 
 /***************************************************************END OF FILE****/
