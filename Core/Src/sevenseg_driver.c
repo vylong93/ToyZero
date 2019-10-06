@@ -109,15 +109,27 @@ void performSevenSegOneStepScan(void) {
     break;
 
     case 2:
-      displayNumber(1, (g_displayValue / 10) % 10);
+      if (g_displayValue >= 10) {
+        displayNumber(1, (g_displayValue / 10) % 10);
+      } else {
+        displayDigit(1, DIGIT_NONE);
+      }
     break;
 
     case 3:
-      displayNumber(2, (g_displayValue / 100) % 10);
+      if (g_displayValue >= 100) {
+        displayNumber(2, (g_displayValue / 100) % 10);
+      } else {
+        displayDigit(2, DIGIT_NONE);
+      }
     break;
 
     case 4:
-      displayNumber(3, (g_displayValue / 1000) % 10);
+      if (g_displayValue >= 1000) {
+        displayNumber(3, (g_displayValue / 1000) % 10);
+      } else {
+        displayDigit(3, DIGIT_NONE);
+      }
     break;
 
     default:
