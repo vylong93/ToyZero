@@ -302,8 +302,9 @@ void runningPlayState (void) {
     g_newRecordUpdate = 0;
     for (int i = 0; (i < measure_length) && (remainLive >= 0); i++) {
       expectedPointer = 0;
+      turnOffDisplay();
+      _disableAllInputButtons();
       for (int j = 0; j < measures_list[i].length; j += 2) { /* maximum lenght is 32 */
-        turnOffDisplay();
         if (measures_list[i].data[j] != REST) {
           g_expectedIndexBuffer[expectedPointer] = get_button_index_from_node(measures_list[i].data[j]);
           g_playbackNodeBuffer[expectedPointer] = measures_list[i].data[j];
@@ -311,15 +312,17 @@ void runningPlayState (void) {
         }
         play_with_led(measures_list[i].data[j], measures_list[i].data[j + 1]);
       }
+      _enableAllInputButtons();
 
       for (int j = 0; (j < expectedPointer) && (remainLive >= 0); j++) {
         g_newRecordUpdate = 0;
         _clearButtonRecord();
         setDisplayNumber(g_currentScore);
-        _enableAllInputButtons();
+        //_enableAllInputButtons();
         turnOnDisplay();
         while (!g_newRecordUpdate);
-        _disableAllInputButtons();
+        //_disableAllInputButtons();
+        g_newRecordUpdate = 0;
 
         if (g_buttonRecord[g_expectedIndexBuffer[j]] == 1) {
           setDisplayNumber(++g_currentScore);
@@ -331,7 +334,6 @@ void runningPlayState (void) {
             setGameState(GAME_OVER);
           }
         }
-        g_newRecordUpdate = 0;
       }
       HAL_Delay(250);
     }
