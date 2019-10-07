@@ -208,9 +208,9 @@ void play_with_led(note_t note, unsigned int duration_ticks) {
   * @retval None
   * @retval None
   */
-void play_measures(measure_t* measures_list, unsigned char* measure_sequence, int sequence_length) {
-  for (int i = 0; i < sequence_length; i++) {
-    for (int j = 0; j < measures_list[measure_sequence[i]].length; j += 2) {
+void play_measures(measure_t* measures_list, unsigned char* measure_sequence, int sequence_length, char * p_force_stop) {
+  for (int i = 0; (i < sequence_length) && (*p_force_stop == 0); i++) {
+    for (int j = 0; (j < measures_list[measure_sequence[i]].length) && (*p_force_stop == 0); j += 2) {
       play_with_led(measures_list[measure_sequence[i]].data[j], measures_list[measure_sequence[i]].data[j + 1]);
     }
   }
@@ -219,7 +219,7 @@ void play_measures(measure_t* measures_list, unsigned char* measure_sequence, in
   * @brief  Play super mario measures
   * @retval None
   */
-void play_super_mario_song(void) {
+void play_super_mario_song(char * p_force_stop) {
   note_t measure_1[] = { E4, 1, E4, 1, REST, 1, E4, 1, REST, 1, C4, 1, E4, 1, REST, 1, G4, 1, REST, 3, G3, 1, REST, 3 };
   note_t measure_2[] = { C4, 1, REST, 2, G3, 1, REST, 2, E3, 1, REST, 2, A3, 1, REST, 1, B3, 1, REST, 1, As3, 1, A3, 1, REST, 1 };
   note_t measure_3[] = { G3, 1, E4, 1, REST, 1, G4, 1, A4, 1, REST, 1, F4, 1, G4, 1, REST, 1, E4, 1, REST, 1, C4, 1, D4, 1, B3, 1, REST, 2 };
@@ -242,14 +242,14 @@ void play_super_mario_song(void) {
 
   unsigned char super_mario_measure_sequence[] = { 1, 2, 3, 2, 3, 4, 5, 4, 6, 4, 5, 4, 6, 7, 8, 7 };
 
-  play_measures(measures_list, super_mario_measure_sequence, 16);
+  play_measures(measures_list, super_mario_measure_sequence, 16, p_force_stop);
 }
 
 /**
   * @brief  Play Bobomb Battlefield measures
   * @retval None
   */
-void play_bobomb_battlefield_song(void) {
+void play_bobomb_battlefield_song(char * p_force_stop) {
   note_t measure_1[] = { C5, 2, A4, 2, C5, 2, D5, 1, C5, 1, REST, 1, E4, 3, F4, 2, Fs4, 2 };
   note_t measure_2[] = { G4, 3, REST, 1, G4, 1, G3, 2, G4, 2, REST, 5, D5, 1, Eb5, 1 };
   note_t measure_3[] = { E5, 1, Eb5, 1, E5, 1, G5, 2, A5, 1, G5, 2, C5, 4, REST, 2, G4, 1, Ab4, 1 };
@@ -275,14 +275,14 @@ void play_bobomb_battlefield_song(void) {
                               };
   unsigned char super_bobomb_battlefield_sequence[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
-  play_measures(measures_list, super_bobomb_battlefield_sequence, 10);
+  play_measures(measures_list, super_bobomb_battlefield_sequence, 10, p_force_stop);
 }
 
 /**
   * @brief  Play Princess Slide measures
   * @retval None
   */
-void play_princess_slide_song(void) {
+void play_princess_slide_song(char * p_force_stop) {
   note_t measure_1[] = { A5, 4, A3, 4, A5, 4, A3, 4 };
   note_t measure_2[] = { A5, 4, Fs5, 4, E5, 4, Ds5, 4 };
   note_t measure_3[] = { D5, 2, G3, 2, B3, 2, G3, 2, D5, 2, G3, 2, B3, 2, G3, 2 };
@@ -314,7 +314,7 @@ void play_princess_slide_song(void) {
                               };
   unsigned char super_princess_slide_sequence[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
 
-  play_measures(measures_list, super_princess_slide_sequence, 13);
+  play_measures(measures_list, super_princess_slide_sequence, 13, p_force_stop);
 }
 
 /**
@@ -324,21 +324,21 @@ void play_princess_slide_song(void) {
   *            @arg SUPER_MARIO: Super Mario song
   * @retval None
   */
-void play_song(song_t song) {
+void play_song(song_t song, char * p_force_stop) {
   switch (song) {
     case SUPER_MARIO:
       set_bpm(150);
-      play_super_mario_song();
+      play_super_mario_song(p_force_stop);
     break;
 
     case BOBOMB_BATTLEFIELD:
       set_bpm(110);
-      play_bobomb_battlefield_song();
+      play_bobomb_battlefield_song(p_force_stop);
     break;
 
     case PRINCESS_SLIDE:
       set_bpm(180);
-      play_princess_slide_song();
+      play_princess_slide_song(p_force_stop);
     break;
 
     default:

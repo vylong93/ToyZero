@@ -35,7 +35,8 @@ typedef enum game_state {
   TEST_MODE = 0,
   START_GAME,
   PLAYING,
-  GAME_OVER
+  GAME_OVER,
+  MUSIC
 } game_state_t;
 
 typedef enum game_level {
@@ -74,6 +75,8 @@ volatile int g_expectedIndexBuffer[32] = { 0 };
 volatile note_t g_playbackNodeBuffer[32] = { 0 };
 volatile uint32_t g_currentScore = 0;
 volatile uint32_t g_lastHighestScore = 0;
+char g_force_stop = 0;
+song_t g_target_music = SUPER_MARIO;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -344,6 +347,7 @@ void runningGameOverState (void) {
   audio_transition_gameover();
   g_lastHighestScore = (g_currentScore > g_lastHighestScore) ? (g_currentScore) : (g_lastHighestScore);
   setDisplayNumber(g_currentScore);
+  _enableAllInputButtons();
   /* Blinking current score */
   while (!g_newStateUpdate) {
     turnOnDisplay();
@@ -425,6 +429,12 @@ int main(void)
 
       case GAME_OVER:
         runningGameOverState();
+      break;
+
+      case MUSIC:
+        g_force_stop = 0;
+        play_song(g_target_music, &g_force_stop);
+        g_state = START_GAME;
       break;
 
       default:
@@ -880,6 +890,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
         case GAME_OVER:
           setGameState(START_GAME);
         default:
+        case MUSIC:
+          g_force_stop = 1;
         break;
       }
     break;
@@ -887,6 +899,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     case BUTTON1_Pin:
       switch (g_state) {
         case PLAYING: g_buttonRecord[0] = 1; g_newRecordUpdate = 1; break;
+        case GAME_OVER: break;
         default: setDisplayNumber(1); audio_button_1(); break;
       }
     break;
@@ -894,12 +907,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
       switch (g_state) {
         case START_GAME: g_level = EASY; setGameState(PLAYING); break;
         case PLAYING: g_buttonRecord[1] = 1; g_newRecordUpdate = 1; break;
+        case GAME_OVER: break;
         default: setDisplayNumber(2); audio_button_2(); break;
       }
     break;
     case BUTTON3_Pin:
       switch (g_state) {
         case PLAYING: g_buttonRecord[2] = 1; g_newRecordUpdate = 1; break;
+        case GAME_OVER: break;
         default: setDisplayNumber(3); audio_button_3(); break;
       }
     break;
@@ -907,12 +922,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
       switch (g_state) {
         case START_GAME: g_level = NORMAL; setGameState(PLAYING); break;
         case PLAYING: g_buttonRecord[3] = 1; g_newRecordUpdate = 1; break;
+        case GAME_OVER: break;
         default: setDisplayNumber(4); audio_button_4(); break;
       }
     break;
     case BUTTON5_Pin:
       switch (g_state) {
         case PLAYING: g_buttonRecord[4] = 1; g_newRecordUpdate = 1; break;
+        case GAME_OVER: g_target_music = SUPER_MARIO; setGameState(MUSIC); break;
         default: setDisplayNumber(5); audio_button_5(); break;
       }
     break;
@@ -920,12 +937,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
       switch (g_state) {
         case START_GAME: g_level = HARD; setGameState(PLAYING); break;
         case PLAYING: g_buttonRecord[5] = 1; g_newRecordUpdate = 1; break;
+        case GAME_OVER: g_target_music = BOBOMB_BATTLEFIELD; setGameState(MUSIC); break;
         default: setDisplayNumber(6); audio_button_6(); break;
       }
     break;
     case BUTTON7_Pin:
       switch (g_state) {
         case PLAYING: g_buttonRecord[6] = 1; g_newRecordUpdate = 1; break;
+        case GAME_OVER: g_target_music = PRINCESS_SLIDE; setGameState(MUSIC); break;
         default: setDisplayNumber(7); audio_button_7(); break;
       }
     break;
