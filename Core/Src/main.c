@@ -169,11 +169,10 @@ void _test_all_in_one (led_rgb_t led, note_t note, unsigned int duration_ticks,
   turn_led_off(led);
 }
 void runningTestMode(void) {
-  uint32_t duration_ticks = 2;
+  uint32_t duration_ticks = 1;
   unsigned char no_sound = 0;
   setDisplayNumber(0);
   turnOnDisplay();
-  _enableAllInputButtons();
   set_bpm(150);
 
   /* Up */
@@ -194,6 +193,8 @@ void runningTestMode(void) {
 
   setDisplayIdle();
   turn_on_all_leds();
+  _enableAllInputButtons();
+  g_newStateUpdate = 0;
   while (!g_newStateUpdate) {
     for (int k = 0; (g_newStateUpdate == 0) && (k < 360); k++)
     {
@@ -398,6 +399,7 @@ int main(void)
   turnOnDisplay();
   setDisplayIdle();
   renderBatteryPercentage();
+  g_state = TEST_MODE;
 
   /* USER CODE END 2 */
 
