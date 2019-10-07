@@ -869,9 +869,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   switch  (GPIO_Pin) {
     case ACT_BUTTON_Pin:
       switch (g_state) {
+        case PLAYING:
+          g_newRecordUpdate = 1; /* Break while loop */
+          setGameState(START_GAME);
+          break;
         case TEST_MODE:
         case START_GAME:
-        case PLAYING:
+          setGameState(START_GAME);
+          break;
         case GAME_OVER:
           setGameState(START_GAME);
         default:
