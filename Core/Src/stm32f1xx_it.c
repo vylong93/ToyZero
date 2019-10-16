@@ -218,7 +218,39 @@ void EXTI0_IRQHandler(void)
 void EXTI9_5_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI9_5_IRQn 0 */
+  HAL_NVIC_DisableIRQ(EXTI9_5_IRQn);
 
+  /* Hack code for Button[1..4] all in GPIOB */
+  uint32_t pins_state = GPIOB->IDR & (GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7 | GPIO_PIN_8);
+
+  if (__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_5) != 0x00u)
+  {
+    if ((pins_state & GPIO_PIN_5) == 0) {
+      HAL_GPIO_EXTI_Callback(GPIO_PIN_5);
+    }
+  }
+  else if (__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_6) != 0x00u)
+  {
+    if ((pins_state & GPIO_PIN_6) == 0) {
+      HAL_GPIO_EXTI_Callback(GPIO_PIN_6);
+    }
+  }
+  else if (__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_7) != 0x00u)
+  {
+    if ((pins_state & GPIO_PIN_7) == 0) {
+      HAL_GPIO_EXTI_Callback(GPIO_PIN_7);
+    }
+  }
+  else if (__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_8) != 0x00u)
+  {
+    if ((pins_state & GPIO_PIN_8) == 0) {
+      HAL_GPIO_EXTI_Callback(GPIO_PIN_8);
+    }
+  }
+
+  __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7 | GPIO_PIN_8);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+  return /* Skip the default generated code */
   /* USER CODE END EXTI9_5_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_6);
