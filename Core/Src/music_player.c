@@ -46,7 +46,7 @@ measure_t mario_measures_list[] = { {.data = mario_measure_1, .length = 8},
                                     {.data = mario_measure_8, .length = 14},
                                     {.data = mario_measure_9, .length = 16},
                                     {.data = mario_measure_10, .length = 18},
-                                    {.data = mario_measure_11, .length = 18},
+                                    {.data = mario_measure_11, .length = 16},
                                     {.data = mario_measure_12, .length = 20},
                                     {.data = mario_measure_13, .length = 10}};
 
