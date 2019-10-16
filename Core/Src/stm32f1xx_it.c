@@ -295,7 +295,33 @@ void TIM4_IRQHandler(void)
 void EXTI15_10_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI15_10_IRQn 0 */
+  HAL_NVIC_DisableIRQ(EXTI15_10_IRQn);
 
+  /* Hack code for Button[1..4] all in GPIOB */
+  uint32_t pins_state = GPIOB->IDR & (GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15);
+
+  if (__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_13) != 0x00u)
+  {
+    if ((pins_state & GPIO_PIN_13) == 0) {
+      HAL_GPIO_EXTI_Callback(GPIO_PIN_13);
+    }
+  }
+  else if (__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_14) != 0x00u)
+  {
+    if ((pins_state & GPIO_PIN_14) == 0) {
+      HAL_GPIO_EXTI_Callback(GPIO_PIN_14);
+    }
+  }
+  else if (__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_15) != 0x00u)
+  {
+    if ((pins_state & GPIO_PIN_15) == 0) {
+      HAL_GPIO_EXTI_Callback(GPIO_PIN_15);
+    }
+  }
+
+  __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+  return /* Skip the default generated code */
   /* USER CODE END EXTI15_10_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_14);
