@@ -104,6 +104,55 @@ measure_t* get_sevenHabits_measures_list(int *length) {
   return sevenHabits_measures_list;
 }
 
+
+note_t apple_measure_1[] = { Eb4, 1, F4, 1, Gb4, 1, Ab4, 1, Bb4, 2 }; // 10
+note_t apple_measure_2[] = { Eb5, 1, Db5, 1, Bb4, 2, Eb4, 2 }; // 8
+note_t apple_measure_4[] = { Bb4, 1, Ab4, 1, Gb4, 1, F4, 1 }; // 8
+note_t apple_measure_5[] = { Eb4, 1, F4, 1, Gb4, 1, Ab4, 1, Bb4, 2 }; // 10
+note_t apple_measure_6[] = { Ab4, 1, Gb4, 1 }; // 4
+note_t apple_measure_7[] = { F4, 1, Eb4, 1, F4, 1, Gb4, 1 }; // 8
+note_t apple_measure_8[] = { F4, 1, Eb4, 1, D4, 1, F4, 1 }; // 8
+note_t apple_measure_9[] = { F4, 2, Gb4, 2, Ab4, 2, Bb4, 2 }; // 8
+note_t apple_measure_10[] = { Db5, 1, Eb5, 1, Bb4, 1, Ab4, 1, Bb4, 2 }; // 10
+note_t apple_measure_11[] = { Ab4, 1, Bb4, 1, Db5, 1, Eb5, 1, Bb4, 1, Ab4, 1, Bb4, 2 }; // 14
+note_t apple_measure_12[] = { Ab4, 1, Bb4, 1, Ab4, 1, Gb4, 1, F4, 1, Db4, 1, Eb4, 2 }; // 14
+note_t apple_measure_13[] = { Db4, 1, Eb4, 1, F4, 1, Gb4, 1, Ab4, 1, Bb4, 1, Eb4, 2 }; // 14
+note_t apple_measure_14[] = { Bb4, 1, Db5, 1 }; // 4
+note_t apple_measure_15[] = { Db5, 1, Eb5, 1, Bb4, 1, Ab4, 1, Bb4, 2, Ab4, 1, Bb4, 1 }; // 14
+note_t apple_measure_16[] = { Db5, 1, Eb5, 1, Bb4, 1, Ab4, 1, Bb4, 2, Eb5, 1, F5, 1 }; // 14
+note_t apple_measure_17[] = { Gb5, 1, F5, 1, Eb5, 1, Db5, 1, Bb4, 2, Ab4, 1, Bb4, 1 }; // 14
+note_t apple_measure_18[] = { Ab4, 1, Gb4, 1, F4, 1, Db4, 1, Eb4, 4 }; // 10
+
+measure_t apple_measures_list[] = {
+                                    {.data = apple_measure_1, .length = 10},
+                                    {.data = apple_measure_2, .length = 8},
+                                    {.data = apple_measure_4, .length = 8},
+                                    {.data = apple_measure_5, .length = 10},
+                                    {.data = apple_measure_6, .length = 4},
+                                    {.data = apple_measure_7, .length = 8},
+                                    {.data = apple_measure_8, .length = 8},
+                                    {.data = apple_measure_1, .length = 10},
+                                    {.data = apple_measure_2, .length = 8},
+                                    {.data = apple_measure_4, .length = 8},
+                                    {.data = apple_measure_5, .length = 10},
+                                    {.data = apple_measure_6, .length = 4},
+                                    {.data = apple_measure_9, .length = 8},
+                                    {.data = apple_measure_10, .length = 10},
+                                    {.data = apple_measure_11, .length = 14},
+                                    {.data = apple_measure_12, .length = 14},
+                                    {.data = apple_measure_13, .length = 14},
+                                    {.data = apple_measure_14, .length = 4},
+                                    {.data = apple_measure_15, .length = 14},
+                                    {.data = apple_measure_16, .length = 14},
+                                    {.data = apple_measure_17, .length = 14},
+                                    {.data = apple_measure_18, .length = 10}};
+
+measure_t* get_apple_measures_list(int *length) {
+  *length = 22;
+  return apple_measures_list;
+}
+
+
 /**
   * @brief  Sets the tempo in BPM (beats per minute) at which the music will play back.
   * @param  bpm Number of Beat Per Minute
