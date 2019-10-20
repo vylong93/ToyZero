@@ -318,6 +318,28 @@ void play_princess_slide_song(char * p_force_stop) {
 }
 
 /**
+  * @brief  Play Nu Cuoi Xinh - Nhac Thieu Nhi
+  * @retval None
+  */
+void play_nu_cuoi_xinh(char * p_force_stop) {
+  note_t measure_1[] = { F4, 1, G4, 1, A4, 1, F4, 1, C4, 2, C4, 2 };
+  note_t measure_2[] = { F4, 1, G4, 1, A4, 1, F4, 1, C5, 2, C5, 2 };
+  note_t measure_3[] = { C5, 1, D5, 1, C5, 1, A4, 1, F4, 1, G4, 1, A4, 1, F4, 1, G4, 4 };
+  note_t measure_4[] = { C5, 1, D5, 1, C5, 1, A4, 1, F4, 1, G4, 1, A4, 1, F4, 1, G4, 1, C5, 1, A4, 1, G4, 1, F4, 4 };
+
+  measure_t measures_list[] = { {.data = NULL, .length = 0},
+                                {.data = measure_1, .length = 12},
+                                {.data = measure_2, .length = 12},
+                                {.data = measure_3, .length = 18},
+                                {.data = measure_4, .length = 26}
+                              };
+
+  unsigned char measure_sequence[] = { 1, 2, 3, 1, 2, 4, 1, 2, 3, 1, 2, 4 };
+
+  play_measures(measures_list, measure_sequence, 12, p_force_stop);
+}
+
+/**
   * @brief  Blocking call function to play measures of a specific song
   * @param  song Target song to play
   *          This parameter can be one of the following values:
@@ -339,6 +361,11 @@ void play_song(song_t song, char * p_force_stop) {
     case PRINCESS_SLIDE:
       set_bpm(180);
       play_princess_slide_song(p_force_stop);
+    break;
+
+    case NU_CUOI_XINH:
+      set_bpm(80);
+      play_nu_cuoi_xinh(p_force_stop);
     break;
 
     default:

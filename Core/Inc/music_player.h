@@ -86,6 +86,7 @@ typedef enum Song {
   SUPER_MARIO = 0,
   BOBOMB_BATTLEFIELD = 1,
   PRINCESS_SLIDE = 2,
+  NU_CUOI_XINH = 3,
 } song_t;
 
 measure_t* get_mario_measures_list(int *length);
