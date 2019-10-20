@@ -55,6 +55,55 @@ measure_t* get_mario_measures_list(int *length) {
   return mario_measures_list;
 }
 
+
+note_t sevenHabits_measure_1[]  = { F4, 1, G4, 1 }; // 4
+note_t sevenHabits_measure_2[]  = { A4, 1, F4, 1 }; // 4
+note_t sevenHabits_measure_3[]  = { C4, 2, C4, 2 }; // 4
+note_t sevenHabits_measure_4[]  = { F4, 1, G4, 1, A4, 1 }; // 6
+note_t sevenHabits_measure_5[]  = { F4, 1, C5, 2, C5, 2 }; // 6
+note_t sevenHabits_measure_6[]  = { C5, 1, D5, 1, C5, 1, A4, 1 }; // 8
+note_t sevenHabits_measure_7[]  = { F4, 1, G4, 1, A4, 1, F4, 1, G4, 4 }; // 10
+note_t sevenHabits_measure_8[]  = { F4, 1, G4, 1, A4, 1 }; // 6
+note_t sevenHabits_measure_9[]  = { F4, 1, C4, 2, C4, 2 }; // 6
+note_t sevenHabits_measure_10[] = { F4, 1, G4, 1, A4, 1 }; // 6
+note_t sevenHabits_measure_11[] = { F4, 1, C5, 2, C5, 2 }; // 6
+note_t sevenHabits_measure_12[] = { C5, 1, D5, 1, C5, 1, A4, 1 }; // 8
+note_t sevenHabits_measure_13[] = { F4, 1, G4, 1, A4, 1, F4, 1 }; // 8
+note_t sevenHabits_measure_14[] = { G4, 1, C5, 1, A4, 1, G4, 1, F4, 4 }; // 10
+note_t sevenHabits_measure_15[] = { F4, 1, G4, 1, A4, 1, F4, 1, C4, 2, C4, 2 }; // 12
+note_t sevenHabits_measure_16[] = { F4, 1, G4, 1, A4, 1, F4, 1, C5, 2, C5, 2 }; // 12
+note_t sevenHabits_measure_17[] = { C5, 1, D5, 1, C5, 1, A4, 1 }; // 8
+note_t sevenHabits_measure_18[] = { F4, 1, G4, 1, A4, 1, F4, 1, G4, 4 }; // 10
+note_t sevenHabits_measure_19[] = { C5, 1, D5, 1, C5, 1, A4, 1, F4, 1, G4, 1 }; // 12
+note_t sevenHabits_measure_20[] = { A4, 1, F4, 1, G4, 1, C5, 1, A4, 1, G4, 1, F4, 4 }; // 14
+
+measure_t sevenHabits_measures_list[] = { {.data = sevenHabits_measure_1, .length = 4},
+                                          {.data = sevenHabits_measure_2, .length = 4},
+                                          {.data = sevenHabits_measure_3, .length = 4},
+                                          {.data = sevenHabits_measure_4, .length = 6},
+                                          {.data = sevenHabits_measure_5, .length = 6},
+                                          {.data = sevenHabits_measure_6, .length = 8},
+                                          {.data = sevenHabits_measure_7, .length = 10},
+                                          {.data = sevenHabits_measure_8, .length = 6},
+                                          {.data = sevenHabits_measure_9, .length = 6},
+                                          {.data = sevenHabits_measure_10, .length = 6},
+                                          {.data = sevenHabits_measure_11, .length = 6},
+                                          {.data = sevenHabits_measure_12, .length = 8},
+                                          {.data = sevenHabits_measure_13, .length = 8},
+                                          {.data = sevenHabits_measure_14, .length = 10},
+                                          {.data = sevenHabits_measure_15, .length = 12},
+                                          {.data = sevenHabits_measure_16, .length = 12},
+                                          {.data = sevenHabits_measure_17, .length = 8},
+                                          {.data = sevenHabits_measure_18, .length = 10},
+                                          {.data = sevenHabits_measure_15, .length = 12},
+                                          {.data = sevenHabits_measure_16, .length = 12},
+                                          {.data = sevenHabits_measure_19, .length = 12},
+                                          {.data = sevenHabits_measure_20, .length = 14}};
+measure_t* get_sevenHabits_measures_list(int *length) {
+  *length = 22;
+  return sevenHabits_measures_list;
+}
+
 /**
   * @brief  Sets the tempo in BPM (beats per minute) at which the music will play back.
   * @param  bpm Number of Beat Per Minute

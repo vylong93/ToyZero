@@ -90,6 +90,7 @@ typedef enum Song {
 } song_t;
 
 measure_t* get_mario_measures_list(int *length);
+measure_t* get_sevenHabits_measures_list(int *length);
 
 void set_bpm(unsigned int bpm);
 void play(note_t note, unsigned int duration_ticks);
