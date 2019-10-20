@@ -250,7 +250,6 @@ void _clearButtonRecord(void) {
   }
 }
 void runningPlayState (void) {
-  song_t targetSong = SUPER_MARIO;
   signed int remainLive = 0;
   int measure_length = 0;
   measure_t* measures_list = NULL;
@@ -263,7 +262,6 @@ void runningPlayState (void) {
     case EASY:
       setDisplayText(DIGIT_E, DIGIT_DASH, DIGIT_NONE, DIGIT_NONE);
       remainLive = 0;
-      targetSong = NU_CUOI_XINH;
       current_bpm = 60;
       audio_transition_starting_to_easy();
       measures_list = get_sevenHabits_measures_list(&measure_length);
@@ -271,17 +269,15 @@ void runningPlayState (void) {
 
     case NORMAL:
       setDisplayText(DIGIT_N, DIGIT_DASH, DIGIT_DASH, DIGIT_NONE);
-      remainLive = 0; // 3
-      targetSong = BOBOMB_BATTLEFIELD;
-      current_bpm = 100;
+      remainLive = 0;
+      current_bpm = 70;
       audio_transition_starting_to_normal();
-      measures_list = get_mario_measures_list(&measure_length);
+      measures_list = get_apple_measures_list(&measure_length);
     break;
 
     case HARD:
       setDisplayText(DIGIT_H, DIGIT_DASH, DIGIT_DASH, DIGIT_DASH);
       remainLive = 0;
-      targetSong = PRINCESS_SLIDE;
       current_bpm = 120;
       audio_transition_starting_to_hard();
       measures_list = get_mario_measures_list(&measure_length);
