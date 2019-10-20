@@ -263,10 +263,10 @@ void runningPlayState (void) {
     case EASY:
       setDisplayText(DIGIT_E, DIGIT_DASH, DIGIT_NONE, DIGIT_NONE);
       remainLive = 0;
-      targetSong = SUPER_MARIO;
+      targetSong = NU_CUOI_XINH;
       current_bpm = 60;
       audio_transition_starting_to_easy();
-      measures_list = get_mario_measures_list(&measure_length);
+      measures_list = get_sevenHabits_measures_list(&measure_length);
     break;
 
     case NORMAL:
@@ -924,7 +924,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
       switch (g_state) {
         case START_GAME: g_level = NORMAL; setGameState(PLAYING); break;
         case PLAYING: g_buttonRecord[3] = 1; g_newRecordUpdate = 1; break;
-        case GAME_OVER: break;
+        case GAME_OVER: g_target_music = NU_CUOI_XINH; setGameState(MUSIC); break;
         default: setDisplayNumber(4); audio_button_4(); break;
       }
     break;
