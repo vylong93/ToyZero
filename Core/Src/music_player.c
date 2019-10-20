@@ -389,6 +389,46 @@ void play_nu_cuoi_xinh(char * p_force_stop) {
 }
 
 /**
+  * @brief  Play Bad Apple - simple version
+  * @retval None
+  */
+void play_bad_apple(char * p_force_stop) {
+  note_t measure_1[] = { Eb4, 1, F4, 1, Gb4, 1, Ab4, 1, Bb4, 2, Eb5, 1, Db5, 1 }; // 14
+  note_t measure_2[] = { Bb4, 2, Eb4, 2, Bb4, 1, Ab4, 1, Gb4, 1, F4, 1 }; // 12
+  note_t measure_3[] = { Eb4, 1, F4, 1, Gb4, 1, Ab4, 1, Bb4, 2, Ab4, 1, Gb4, 1 }; // 14
+  note_t measure_4[] = { F4, 1, Eb4, 1, F4, 1, Gb4, 1, F4, 1, Eb4, 1, D4, 1, F4, 1 }; // 16
+  note_t measure_5[] = { F4, 2, Gb4, 2, Ab4, 2, Bb4, 2 }; // 8
+
+  note_t measure_6[] = { Db5, 1, Eb5, 1, Bb4, 1, Ab4, 1, Bb4, 2, Ab4, 1, Bb4, 1 }; // 14
+
+  note_t measure_7[] = { Ab4, 1, Gb4, 1, F4, 1, Db4, 1, Eb4, 2, Db4, 1, Eb4, 1 }; // 14
+  note_t measure_8[] = { F4, 1, Gb4, 1, Ab4, 1, Bb4, 1, Eb4, 2, Bb4, 1, Db5, 1 }; // 14
+
+  note_t measure_9[] = { Db5, 1, Eb5, 1, Bb4, 1, Ab4, 1, Bb4, 2, Eb5, 1, F5, 1 }; // 14
+  note_t measure_10[] = { Gb5, 1, F5, 1, Eb5, 1, Db5, 1, Bb4, 2, Ab4, 1, Bb4, 1 }; // 14
+  note_t measure_11[] = { Ab4, 1, Gb4, 1, F4, 1, Db4, 1, Eb4, 4 }; // 10
+
+  measure_t measures_list[] = { {.data = NULL, .length = 0},
+                                {.data = measure_1, .length = 14},
+                                {.data = measure_2, .length = 12},
+                                {.data = measure_3, .length = 14},
+                                {.data = measure_4, .length = 15},
+                                {.data = measure_5, .length = 8},
+                                {.data = measure_6, .length = 14},
+                                {.data = measure_7, .length = 14},
+                                {.data = measure_8, .length = 14},
+                                {.data = measure_9, .length = 14},
+                                {.data = measure_10, .length = 14},
+                                {.data = measure_11, .length = 10}
+                              };
+
+  unsigned char measure_sequence[] = { 1, 2, 3, 4, 1, 2, 3, 5, 6, 6, 7, 8, 6, 6, 7, 8, 6, 9, 10, 11 };
+
+  play_measures(measures_list, measure_sequence, 20, p_force_stop);
+}
+
+
+/**
   * @brief  Blocking call function to play measures of a specific song
   * @param  song Target song to play
   *          This parameter can be one of the following values:
@@ -415,6 +455,11 @@ void play_song(song_t song, char * p_force_stop) {
     case NU_CUOI_XINH:
       set_bpm(80);
       play_nu_cuoi_xinh(p_force_stop);
+    break;
+
+    case BAD_APPLE:
+      set_bpm(96);
+      play_bad_apple(p_force_stop);
     break;
 
     default:
