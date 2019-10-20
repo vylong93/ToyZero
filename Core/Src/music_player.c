@@ -422,19 +422,19 @@ void play_princess_slide_song(char * p_force_stop) {
 void play_nu_cuoi_xinh(char * p_force_stop) {
   note_t measure_1[] = { F4, 1, G4, 1, A4, 1, F4, 1, C4, 2, C4, 2 };
   note_t measure_2[] = { F4, 1, G4, 1, A4, 1, F4, 1, C5, 2, C5, 2 };
-  note_t measure_3[] = { C5, 1, D5, 1, C5, 1, A4, 1, F4, 1, G4, 1, A4, 1, F4, 1, G4, 4 };
-  note_t measure_4[] = { C5, 1, D5, 1, C5, 1, A4, 1, F4, 1, G4, 1, A4, 1, F4, 1, G4, 1, C5, 1, A4, 1, G4, 1, F4, 4 };
+  note_t measure_3[] = { C5, 1, D5, 1, C5, 1, A4, 1, F4, 1, G4, 1, A4, 1, F4, 1, G4, 2, REST, 2 };
+  note_t measure_4[] = { C5, 1, D5, 1, C5, 1, A4, 1, F4, 1, G4, 1, A4, 1, F4, 1, G4, 1, C5, 1, A4, 1, G4, 1, F4, 2, REST, 2 };
 
   measure_t measures_list[] = { {.data = NULL, .length = 0},
                                 {.data = measure_1, .length = 12},
                                 {.data = measure_2, .length = 12},
-                                {.data = measure_3, .length = 18},
-                                {.data = measure_4, .length = 26}
+                                {.data = measure_3, .length = 20},
+                                {.data = measure_4, .length = 28}
                               };
 
-  unsigned char measure_sequence[] = { 1, 2, 3, 1, 2, 4, 1, 2, 3, 1, 2, 4 };
+  unsigned char measure_sequence[] = { 1, 2, 3, 1, 2, 4 };
 
-  play_measures(measures_list, measure_sequence, 12, p_force_stop);
+  play_measures(measures_list, measure_sequence, 6, p_force_stop);
 }
 
 /**
@@ -455,7 +455,7 @@ void play_bad_apple(char * p_force_stop) {
 
   note_t measure_9[] = { Db5, 1, Eb5, 1, Bb4, 1, Ab4, 1, Bb4, 2, Eb5, 1, F5, 1 }; // 14
   note_t measure_10[] = { Gb5, 1, F5, 1, Eb5, 1, Db5, 1, Bb4, 2, Ab4, 1, Bb4, 1 }; // 14
-  note_t measure_11[] = { Ab4, 1, Gb4, 1, F4, 1, Db4, 1, Eb4, 4 }; // 10
+  note_t measure_11[] = { Ab4, 1, Gb4, 1, F4, 1, Db4, 1, Eb4, 2, REST, 2 }; // 12
 
   measure_t measures_list[] = { {.data = NULL, .length = 0},
                                 {.data = measure_1, .length = 14},
@@ -468,7 +468,7 @@ void play_bad_apple(char * p_force_stop) {
                                 {.data = measure_8, .length = 14},
                                 {.data = measure_9, .length = 14},
                                 {.data = measure_10, .length = 14},
-                                {.data = measure_11, .length = 10}
+                                {.data = measure_11, .length = 12}
                               };
 
   unsigned char measure_sequence[] = { 1, 2, 3, 4, 1, 2, 3, 5, 6, 6, 7, 8, 6, 6, 7, 8, 6, 9, 10, 11 };
