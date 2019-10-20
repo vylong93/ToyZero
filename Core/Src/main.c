@@ -916,7 +916,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     case BUTTON3_Pin:
       switch (g_state) {
         case PLAYING: g_buttonRecord[2] = 1; g_newRecordUpdate = 1; break;
-        case GAME_OVER: break;
+        case GAME_OVER: g_target_music = BAD_APPLE; setGameState(MUSIC); break;
         default: setDisplayNumber(3); audio_button_3(); break;
       }
     break;
