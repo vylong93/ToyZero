@@ -349,11 +349,33 @@ void runningGameOverState (void) {
   setDisplayNumber(g_currentScore);
   _enableAllInputButtons();
   /* Blinking current score */
+  int delay = 0;
+  int smallDelay = 100;
+  unsigned char indensity = 50;
   while (!g_newStateUpdate) {
     turnOnDisplay();
-    HAL_Delay(500);
+    //HAL_Delay(500);
+    delay = 500;
+    while (delay > 0) {
+      set_rgb(0,         0,         indensity); turn_led_on(led3); HAL_Delay(smallDelay); turn_off_all_leds();
+      set_rgb(0,         indensity, indensity); turn_led_on(led4); HAL_Delay(smallDelay); turn_off_all_leds();
+      set_rgb(0,         indensity, 0);         turn_led_on(led5); HAL_Delay(smallDelay); turn_off_all_leds();
+      set_rgb(indensity, indensity, 0);         turn_led_on(led6); HAL_Delay(smallDelay); turn_off_all_leds();
+      set_rgb(indensity, 0,         0);         turn_led_on(led7); HAL_Delay(smallDelay); turn_off_all_leds();
+      delay -= (smallDelay * 5);
+    }
+
     turnOffDisplay();
-    HAL_Delay(500);
+    //HAL_Delay(500);
+    delay = 500;
+    while (delay > 0) {
+      set_rgb(indensity, 0,         0);         turn_led_on(led7); HAL_Delay(smallDelay); turn_off_all_leds();
+      set_rgb(indensity, indensity, 0);         turn_led_on(led6); HAL_Delay(smallDelay); turn_off_all_leds();
+      set_rgb(0,         indensity, 0);         turn_led_on(led5); HAL_Delay(smallDelay); turn_off_all_leds();
+      set_rgb(0,         indensity, indensity); turn_led_on(led4); HAL_Delay(smallDelay); turn_off_all_leds();
+      set_rgb(0,         0,         indensity); turn_led_on(led3); HAL_Delay(smallDelay); turn_off_all_leds();
+      delay -= (smallDelay * 5);
+    }
   }
 
   /* Clean up */
