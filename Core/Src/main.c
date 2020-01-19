@@ -322,11 +322,13 @@ void runningPlayState (void) {
 
         if (g_buttonRecord[g_expectedIndexBuffer[j]] == 1) {
           setDisplayNumber(++g_currentScore);
+          g_lastHighestScore = (g_currentScore > g_lastHighestScore) ? (g_currentScore) : (g_lastHighestScore);
           play_with_led(g_playbackNodeBuffer[j], 1);
           _clearButtonRecord();
         } else {
           --remainLive;
           if (remainLive < 0) {
+            _disableAllInputButtons();
             setGameState(GAME_OVER);
           }
         }
